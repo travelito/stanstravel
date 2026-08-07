@@ -5,7 +5,7 @@ import { getAllExcursions } from "@/lib/data/excursions";
 import { getAllTransfers } from "@/lib/data/transfers";
 import { getAllTrainTickets } from "@/lib/data/train-tickets";
 
-const siteUrl = "https://example-karvon.com"; // TODO: replace with the real production domain
+const siteUrl = "https://www.stanstravel.com"; // TODO: replace with the real production domain
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [];

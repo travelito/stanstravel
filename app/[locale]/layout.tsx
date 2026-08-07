@@ -15,7 +15,7 @@ export async function generateMetadata({
   params: { locale: string };
 }): Promise<Metadata> {
   if (!isLocale(params.locale)) return {};
-  const siteUrl = "https://example-karvon.com"; // TODO: replace with real domain
+  const siteUrl = "https://www.stanstravel.com"; // TODO: replace with real domain
   const languages: Record<string, string> = {};
   locales.forEach((l) => {
     languages[l] = `${siteUrl}/${l}`;
