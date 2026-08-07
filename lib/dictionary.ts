@@ -1,0 +1,98 @@
+import type { Locale } from "@/lib/locales";
+
+export const dictionary: Record<Locale, Record<string, string>> = {
+  ru: {
+    siteName: "StansTravel",
+    tagline: "Туры и экскурсии по Узбекистану",
+    navTours: "Туры",
+    navExcursions: "Экскурсии",
+    navTransfers: "Трансферы",
+    navTrainTickets: "Жд-билеты",
+    navAbout: "О нас",
+    navHome: "Главная",
+    heroTitle: "Дорога, которой шли караваны",
+    heroSubtitle:
+      "Однодневные туры и экскурсии по Самарканду, Бухаре и Хиве — с гидом, без спешки.",
+    heroCta: "Смотреть туры",
+    toursTitle: "Туры по городам",
+    excursionsTitle: "Короткие экскурсии",
+    transfersTitle: "Трансферы между городами",
+    trainTicketsTitle: "Билеты на скоростные поезда",
+    aboutTitle: "Почему выбрать нас",
+    aboutIntro:
+      "Мы — туристическая компания с опытом работы более пятнадцати лет в организации туров по Узбекистану и Центральной Азии.",
+    aboutReason1Title: "Пятнадцать лет опыта",
+    aboutReason1Body:
+      "Мы организуем туры и экскурсии по Узбекистану уже больше пятнадцати лет и знаем регион изнутри.",
+    aboutReason2Title: "Личный подход",
+    aboutReason2Body:
+      "Каждый маршрут можно адаптировать под ваши пожелания — по времени, темпу и интересам.",
+    aboutReason3Title: "Надёжная организация",
+    aboutReason3Body:
+      "Билеты, трансферы и гиды бронируются заранее — вы получаете подтверждение до начала поездки.",
+    contactsTitle: "Контакты",
+    contactsPhone: "Телефон",
+    contactsWhatsapp: "Написать в WhatsApp",
+    share: "Поделиться",
+    fromPrice: "от",
+    perPerson: "с человека",
+    duration: "Длительность",
+    hours: "ч",
+    viewDetails: "Подробнее",
+    backToTours: "Все туры",
+    highlights: "Что вы увидите",
+    footerRights: "Все права защищены.",
+    notFoundTitle: "Страница не найдена",
+    notFoundBody: "Такой страницы не существует — возможно, она была перемещена или удалена.",
+    notFoundCta: "Вернуться на главную",
+  },
+  en: {
+    siteName: "StansTravel",
+    tagline: "Tours and Excursions across Uzbekistan",
+    navTours: "Tours",
+    navExcursions: "Excursions",
+    navTransfers: "Transfers",
+    navTrainTickets: "Train Tickets",
+    navAbout: "About",
+    navHome: "Home",
+    heroTitle: "The road the caravans walked",
+    heroSubtitle:
+      "Day tours and excursions in Samarkand, Bukhara, and Khiva — guided, unhurried.",
+    heroCta: "Browse tours",
+    toursTitle: "Tours by City",
+    excursionsTitle: "Short Excursions",
+    transfersTitle: "Transfers between Cities",
+    trainTicketsTitle: "High-Speed Train Tickets",
+    aboutTitle: "Why choose us",
+    aboutIntro:
+      "We're a tourism company with over fifteen years of experience organizing tours across Uzbekistan and Central Asia.",
+    aboutReason1Title: "Fifteen years of experience",
+    aboutReason1Body:
+      "We've been organizing tours and excursions across Uzbekistan for more than fifteen years and know the region inside out.",
+    aboutReason2Title: "A personal approach",
+    aboutReason2Body:
+      "Every route can be adapted to your preferences — timing, pace, and interests.",
+    aboutReason3Title: "Reliable organization",
+    aboutReason3Body:
+      "Tickets, transfers, and guides are booked in advance — you get confirmation before the trip starts.",
+    contactsTitle: "Contacts",
+    contactsPhone: "Phone",
+    contactsWhatsapp: "Message on WhatsApp",
+    share: "Share",
+    fromPrice: "from",
+    perPerson: "per person",
+    duration: "Duration",
+    hours: "h",
+    viewDetails: "View details",
+    backToTours: "All tours",
+    highlights: "What you'll see",
+    footerRights: "All rights reserved.",
+    notFoundTitle: "Page not found",
+    notFoundBody: "This page doesn't exist — it may have been moved or removed.",
+    notFoundCta: "Back to homepage",
+  },
+};
+
+export function t(locale: Locale, key: string): string {
+  return dictionary[locale][key] ?? key;
+}
