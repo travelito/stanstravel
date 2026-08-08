@@ -23,10 +23,14 @@ export async function generateMetadata({
   };
 }
 
-export default function ToursPage({ params }: { params: { locale: string } }) {
+export default async function ToursPage({
+  params,
+}: {
+  params: { locale: string };
+}) {
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
-  const tours = getAllTours();
+  const tours = await getAllTours();
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-16">

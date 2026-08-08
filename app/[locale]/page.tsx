@@ -32,10 +32,14 @@ export async function generateMetadata({
   };
 }
 
-export default function HomePage({ params }: { params: { locale: string } }) {
+export default async function HomePage({
+  params,
+}: {
+  params: { locale: string };
+}) {
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
-  const tours = getAllTours();
+  const tours = await getAllTours();
 
   const jsonLd = {
     "@context": "https://schema.org",

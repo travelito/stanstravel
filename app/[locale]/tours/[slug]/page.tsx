@@ -7,8 +7,8 @@ import { t } from "@/lib/dictionary";
 import { formatDuration } from "@/lib/duration";
 import { getAllTours, getTourBySlug } from "@/lib/data/tours";
 
-export function generateStaticParams() {
-  const tours = getAllTours();
+export async function generateStaticParams() {
+  const tours = await getAllTours();
   return locales.flatMap((locale) => tours.map((tour) => ({ locale, slug: tour.slug })));
 }
 
@@ -19,7 +19,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   if (!isLocale(params.locale)) return {};
   const locale = params.locale as Locale;
-  const tour = getTourBySlug(params.slug);
+  const tour = await getTourBySlug(params.slug);
   if (!tour) return {};
   return {
     title: `${tour.title[locale]} — ${t(locale, "siteName")}`,
@@ -35,14 +35,14 @@ export async function generateMetadata({
   };
 }
 
-export default function TourDetailPage({
+export default async function TourDetailPage({
   params,
 }: {
   params: { locale: string; slug: string };
 }) {
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
-  const tour = getTourBySlug(params.slug);
+  const tour = await getTourBySlug(params.slug);
   if (!tour) notFound(); // real 404 — no fallback to homepage content
 
   const jsonLd = {

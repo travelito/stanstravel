@@ -5,8 +5,8 @@ import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
 import { getAllExcursions, getExcursionBySlug } from "@/lib/data/excursions";
 
-export function generateStaticParams() {
-  const excursions = getAllExcursions();
+export async function generateStaticParams() {
+  const excursions = await getAllExcursions();
   return locales.flatMap((locale) => excursions.map((e) => ({ locale, slug: e.slug })));
 }
 
@@ -17,7 +17,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   if (!isLocale(params.locale)) return {};
   const locale = params.locale as Locale;
-  const excursion = getExcursionBySlug(params.slug);
+  const excursion = await getExcursionBySlug(params.slug);
   if (!excursion) return {};
   return {
     title: `${excursion.title[locale]} — ${t(locale, "siteName")}`,
@@ -26,14 +26,14 @@ export async function generateMetadata({
   };
 }
 
-export default function ExcursionDetailPage({
+export default async function ExcursionDetailPage({
   params,
 }: {
   params: { locale: string; slug: string };
 }) {
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
-  const excursion = getExcursionBySlug(params.slug);
+  const excursion = await getExcursionBySlug(params.slug);
   if (!excursion) notFound();
 
   return (

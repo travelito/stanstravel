@@ -7,8 +7,10 @@ import { getAllTrainTickets } from "@/lib/data/train-tickets";
 
 const siteUrl = "https://www.stanstravel.com"; // TODO: replace with the real production domain
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = [];
+  const allTours = await getAllTours();
+  const allExcursions = await getAllExcursions();
 
   for (const locale of locales) {
     // Static routes
@@ -45,7 +47,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     // Tour detail pages — generated straight from the data source, so a
     // sitemap entry can never point to a tour that doesn't exist.
-    for (const tour of getAllTours()) {
+    for (const tour of allTours) {
       entries.push({
         url: `${siteUrl}/${locale}/tours/${tour.slug}`,
         lastModified: new Date(tour.updatedAt), // real edit date, not "today"
@@ -53,7 +55,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       });
     }
 
-    for (const excursion of getAllExcursions()) {
+    for (const excursion of allExcursions) {
       entries.push({
         url: `${siteUrl}/${locale}/excursions/${excursion.slug}`,
         lastModified: new Date(excursion.updatedAt),

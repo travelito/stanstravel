@@ -21,10 +21,14 @@ export async function generateMetadata({
   };
 }
 
-export default function ExcursionsPage({ params }: { params: { locale: string } }) {
+export default async function ExcursionsPage({
+  params,
+}: {
+  params: { locale: string };
+}) {
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
-  const excursions = getAllExcursions();
+  const excursions = await getAllExcursions();
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-16">

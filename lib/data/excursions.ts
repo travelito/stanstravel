@@ -1,4 +1,9 @@
+// Data now comes from Supabase (table `excursions`) instead of a static
+// array. Every page calling getAllExcursions / getExcursionBySlug keeps
+// working unchanged — only these two functions know about the database.
+
 import type { Locale } from "@/lib/locales";
+import { supabase } from "@/lib/supabase";
 
 export type Excursion = {
   slug: string;
@@ -10,43 +15,53 @@ export type Excursion = {
   summary: Record<Locale, string>;
 };
 
-export const excursions: Excursion[] = [
-  {
-    slug: "samarkand-evening-walk",
-    city: "Samarkand",
-    durationHours: 2,
-    priceUsd: 35,
-    updatedAt: "2026-07-22",
-    title: {
-      ru: "Вечерняя прогулка по Регистану с подсветкой",
-      en: "Evening Walk at Registan with Illumination",
-    },
-    summary: {
-      ru: "Короткая экскурсия к вечерней подсветке площади Регистан.",
-      en: "A short excursion to see Registan Square lit up at night.",
-    },
-  },
-  {
-    slug: "bukhara-craftsmen-walk",
-    city: "Bukhara",
-    durationHours: 3,
-    priceUsd: 40,
-    updatedAt: "2026-07-19",
-    title: {
-      ru: "Ремесленная Бухара: ткачи, чеканщики, кузнецы",
-      en: "Artisan Bukhara: Weavers, Engravers, Blacksmiths",
-    },
-    summary: {
-      ru: "Визит в действующие мастерские старого города.",
-      en: "A visit to working artisan workshops in the old town.",
-    },
-  },
-];
+type ExcursionRow = {
+  slug: string;
+  city: string;
+  duration_hours: number;
+  price_usd: number;
+  updated_at: string;
+  title: Record<Locale, string>;
+  summary: Record<Locale, string>;
+};
 
-export function getAllExcursions(): Excursion[] {
-  return excursions;
+function rowToExcursion(row: ExcursionRow): Excursion {
+  return {
+    slug: row.slug,
+    city: row.city,
+    durationHours: row.duration_hours,
+    priceUsd: row.price_usd,
+    updatedAt: row.updated_at,
+    title: row.title,
+    summary: row.summary,
+  };
 }
 
-export function getExcursionBySlug(slug: string): Excursion | undefined {
-  return excursions.find((e) => e.slug === slug);
+export async function getAllExcursions(): Promise<Excursion[]> {
+  const { data, error } = await supabase
+    .from("excursions")
+    .select("*")
+    .order("city", { ascending: true });
+
+  if (error) {
+    console.error("getAllExcursions failed:", error.message);
+    return [];
+  }
+  return (data as ExcursionRow[]).map(rowToExcursion);
+}
+
+export async function getExcursionBySlug(
+  slug: string
+): Promise<Excursion | undefined> {
+  const { data, error } = await supabase
+    .from("excursions")
+    .select("*")
+    .eq("slug", slug)
+    .maybeSingle();
+
+  if (error || !data) {
+    if (error) console.error("getExcursionBySlug failed:", error.message);
+    return undefined;
+  }
+  return rowToExcursion(data as ExcursionRow);
 }
