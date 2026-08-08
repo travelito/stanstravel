@@ -33,7 +33,7 @@ export default async function ToursPage({
   const tours = await getAllTours();
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-16">
+    <div className="mx-auto max-w-6xl px-6 py-16">
       <nav aria-label="breadcrumb" className="text-sm text-ink/50 mb-6 font-mono">
         <a href={`/${locale}`} className="hover:text-turquoise">
           {t(locale, "navHome")}
@@ -41,7 +41,7 @@ export default async function ToursPage({
         / {t(locale, "toursTitle")}
       </nav>
       <h1 className="font-display text-3xl mb-8">{t(locale, "toursTitle")}</h1>
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {tours.map((tour) => (
           <TourCard key={tour.slug} tour={tour} locale={locale} />
         ))}

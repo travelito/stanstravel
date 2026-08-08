@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
 import { formatDuration } from "@/lib/duration";
 import { getAllTours, getTourBySlug } from "@/lib/data/tours";
+import { ListingImage } from "@/components/ListingImage";
 
 export async function generateStaticParams() {
   const tours = await getAllTours();
@@ -28,7 +28,7 @@ export async function generateMetadata({
     openGraph: {
       title: tour.title[locale],
       description: tour.summary[locale],
-      images: [tour.image],
+      images: tour.image ? [tour.image] : [],
       locale: locale === "ru" ? "ru_RU" : "en_US",
       type: "website",
     },
@@ -75,7 +75,7 @@ export default async function TourDetailPage({
       <h1 className="font-display text-3xl sm:text-4xl mt-2">{tour!.title[locale]}</h1>
 
       <div className="relative h-72 w-full mt-6 rounded-lg overflow-hidden">
-        <Image src={tour!.image} alt={tour!.title[locale]} fill className="object-cover" />
+        <ListingImage src={tour!.image} alt={tour!.title[locale]} sizes="(max-width: 768px) 100vw, 768px" />
       </div>
 
       <div className="flex gap-6 mt-6 font-mono text-sm text-ink/70">

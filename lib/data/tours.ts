@@ -17,7 +17,7 @@ export type Tour = {
   summary: Record<Locale, string>;
   description: Record<Locale, string[]>; // paragraphs
   highlights: Record<Locale, string[]>;
-  image: string;
+  image: string | null;
 };
 
 // Shape of a row as it comes back from Supabase (snake_case, jsonb columns).
@@ -46,9 +46,7 @@ function rowToTour(row: TourRow): Tour {
     summary: row.summary,
     description: row.description,
     highlights: row.highlights,
-    image:
-      row.image ??
-      "https://images.unsplash.com/photo-1596395819057-e34ea1f2e2c0?q=80&w=1200",
+    image: row.image,
   };
 }
 
