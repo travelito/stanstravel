@@ -5,6 +5,7 @@ import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
 import { getAllExcursions, getExcursionBySlug } from "@/lib/data/excursions";
 import { ListingImage } from "@/components/ListingImage";
+import { PhotoGallery } from "@/components/PhotoGallery";
 
 export async function generateStaticParams() {
   const excursions = await getAllExcursions();
@@ -27,7 +28,7 @@ export async function generateMetadata({
     openGraph: {
       title: excursion.title[locale],
       description: excursion.summary[locale],
-      images: excursion.image ? [excursion.image] : [],
+      images: excursion.photos[0] ? [excursion.photos[0].full] : [],
       locale: locale === "ru" ? "ru_RU" : "en_US",
       type: "website",
     },
@@ -60,12 +61,14 @@ export default async function ExcursionDetailPage({
         {excursion!.city}
       </p>
       <h1 className="font-display text-3xl mt-2">{excursion!.title[locale]}</h1>
-      <div className="relative h-72 w-full mt-6 rounded-lg overflow-hidden">
-        <ListingImage
-          src={excursion!.image}
-          alt={excursion!.title[locale]}
-          sizes="(max-width: 768px) 100vw, 768px"
-        />
+      <div className="mt-6">
+        {excursion!.photos.length > 0 ? (
+          <PhotoGallery photos={excursion!.photos} alt={excursion!.title[locale]} />
+        ) : (
+          <div className="relative h-72 w-full rounded-lg overflow-hidden">
+            <ListingImage src={null} alt={excursion!.title[locale]} sizes="(max-width: 768px) 100vw, 768px" />
+          </div>
+        )}
       </div>
       <p className="mt-6 text-ink/90 leading-relaxed">{excursion!.summary[locale]}</p>
       <div className="flex gap-6 mt-6 font-mono text-sm text-ink/70">

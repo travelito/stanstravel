@@ -6,6 +6,7 @@ import { t } from "@/lib/dictionary";
 import { formatDuration } from "@/lib/duration";
 import { getAllTours, getTourBySlug } from "@/lib/data/tours";
 import { ListingImage } from "@/components/ListingImage";
+import { PhotoGallery } from "@/components/PhotoGallery";
 
 export async function generateStaticParams() {
   const tours = await getAllTours();
@@ -28,7 +29,7 @@ export async function generateMetadata({
     openGraph: {
       title: tour.title[locale],
       description: tour.summary[locale],
-      images: tour.image ? [tour.image] : [],
+      images: tour.photos[0] ? [tour.photos[0].full] : [],
       locale: locale === "ru" ? "ru_RU" : "en_US",
       type: "website",
     },
@@ -74,8 +75,14 @@ export default async function TourDetailPage({
       <p className="font-mono text-xs text-turquoise uppercase tracking-wide">{tour!.city}</p>
       <h1 className="font-display text-3xl sm:text-4xl mt-2">{tour!.title[locale]}</h1>
 
-      <div className="relative h-72 w-full mt-6 rounded-lg overflow-hidden">
-        <ListingImage src={tour!.image} alt={tour!.title[locale]} sizes="(max-width: 768px) 100vw, 768px" />
+      <div className="mt-6">
+        {tour!.photos.length > 0 ? (
+          <PhotoGallery photos={tour!.photos} alt={tour!.title[locale]} />
+        ) : (
+          <div className="relative h-72 w-full rounded-lg overflow-hidden">
+            <ListingImage src={null} alt={tour!.title[locale]} sizes="(max-width: 768px) 100vw, 768px" />
+          </div>
+        )}
       </div>
 
       <div className="flex gap-6 mt-6 font-mono text-sm text-ink/70">

@@ -3,7 +3,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/auth/supabase-server";
 import { revalidateTourPaths } from "@/lib/revalidate";
-import { resolvePhotoField } from "@/lib/storage";
 
 function paragraphs(value: FormDataEntryValue | null): string[] {
   return String(value ?? "")
@@ -34,38 +33,22 @@ function tourPayload(formData: FormData) {
 export async function createTour(formData: FormData) {
   const slug = String(formData.get("slug") ?? "");
   const supabase = await createClient();
-
-  let photo: { image?: string | null };
-  try {
-    photo = await resolvePhotoField(supabase, "tours", slug, formData);
-  } catch (e) {
-    redirect(`/admin/tours/new?error=${encodeURIComponent((e as Error).message)}`);
-  }
-
-  const { error } = await supabase.from("tours").insert({ slug, ...tourPayload(formData), ...photo });
+  const { error } = await supabase.from("tours").insert({ slug, ...tourPayload(formData) });
 
   if (error) {
     redirect(`/admin/tours/new?error=${encodeURIComponent(error.message)}`);
   }
 
   revalidateTourPaths(slug);
-  redirect("/admin/tours");
+  redirect(`/admin/tours/${slug}`);
 }
 
 export async function updateTour(formData: FormData) {
   const slug = String(formData.get("slug") ?? "");
   const supabase = await createClient();
-
-  let photo: { image?: string | null };
-  try {
-    photo = await resolvePhotoField(supabase, "tours", slug, formData);
-  } catch (e) {
-    redirect(`/admin/tours/${slug}?error=${encodeURIComponent((e as Error).message)}`);
-  }
-
   const { error } = await supabase
     .from("tours")
-    .update({ ...tourPayload(formData), ...photo, updated_at: new Date().toISOString().slice(0, 10) })
+    .update({ ...tourPayload(formData), updated_at: new Date().toISOString().slice(0, 10) })
     .eq("slug", slug);
 
   if (error) {

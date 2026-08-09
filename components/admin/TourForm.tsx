@@ -1,5 +1,5 @@
 import type { Tour } from "@/lib/data/tours";
-import { PhotoField } from "@/components/admin/PhotoField";
+import { PhotoUploader } from "@/components/admin/PhotoUploader";
 
 const inputClass = "border border-ink/20 rounded-md px-3 py-2 bg-white w-full";
 const labelClass = "flex flex-col gap-1 text-sm";
@@ -16,7 +16,13 @@ export function TourForm({
   const isEdit = Boolean(tour);
 
   return (
-    <form action={action} className="flex flex-col gap-5 max-w-2xl">
+    <div className="flex flex-col gap-8 max-w-2xl">
+      <div>
+        <p className="text-sm font-medium mb-3">Фото (до 10)</p>
+        <PhotoUploader slug={tour?.slug} entity="tours" initialPhotos={tour?.photos ?? []} />
+      </div>
+
+      <form action={action} className="flex flex-col gap-5">
       <label className={labelClass}>
         Slug (латиница, дефисы; часть URL, не меняется после создания)
         <input
@@ -70,8 +76,6 @@ export function TourForm({
           </select>
         </label>
       </div>
-
-      <PhotoField currentImage={tour?.image} />
 
       <div className="grid grid-cols-2 gap-4">
         <label className={labelClass}>
@@ -145,6 +149,7 @@ export function TourForm({
       >
         {isEdit ? "Сохранить" : "Создать"}
       </button>
-    </form>
+      </form>
+    </div>
   );
 }

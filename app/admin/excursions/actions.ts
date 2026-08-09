@@ -3,7 +3,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/auth/supabase-server";
 import { revalidateExcursionPaths } from "@/lib/revalidate";
-import { resolvePhotoField } from "@/lib/storage";
 
 function excursionPayload(formData: FormData) {
   return {
@@ -18,38 +17,22 @@ function excursionPayload(formData: FormData) {
 export async function createExcursion(formData: FormData) {
   const slug = String(formData.get("slug") ?? "");
   const supabase = await createClient();
-
-  let photo: { image?: string | null };
-  try {
-    photo = await resolvePhotoField(supabase, "excursions", slug, formData);
-  } catch (e) {
-    redirect(`/admin/excursions/new?error=${encodeURIComponent((e as Error).message)}`);
-  }
-
-  const { error } = await supabase.from("excursions").insert({ slug, ...excursionPayload(formData), ...photo });
+  const { error } = await supabase.from("excursions").insert({ slug, ...excursionPayload(formData) });
 
   if (error) {
     redirect(`/admin/excursions/new?error=${encodeURIComponent(error.message)}`);
   }
 
   revalidateExcursionPaths(slug);
-  redirect("/admin/excursions");
+  redirect(`/admin/excursions/${slug}`);
 }
 
 export async function updateExcursion(formData: FormData) {
   const slug = String(formData.get("slug") ?? "");
   const supabase = await createClient();
-
-  let photo: { image?: string | null };
-  try {
-    photo = await resolvePhotoField(supabase, "excursions", slug, formData);
-  } catch (e) {
-    redirect(`/admin/excursions/${slug}?error=${encodeURIComponent((e as Error).message)}`);
-  }
-
   const { error } = await supabase
     .from("excursions")
-    .update({ ...excursionPayload(formData), ...photo, updated_at: new Date().toISOString().slice(0, 10) })
+    .update({ ...excursionPayload(formData), updated_at: new Date().toISOString().slice(0, 10) })
     .eq("slug", slug);
 
   if (error) {

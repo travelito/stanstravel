@@ -1,55 +1,49 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
+export type Photo = { thumb: string; medium: string; full: string };
+
 const BUCKET = "listing-photos";
-const MAX_SIZE = 5 * 1024 * 1024;
-const EXTENSIONS: Record<string, string> = {
-  "image/jpeg": "jpg",
-  "image/png": "png",
-  "image/webp": "webp",
-};
+
+export const MAX_PHOTO_SIZE = 5 * 1024 * 1024;
+export const ALLOWED_PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
+// `photos` in the DB stores paths relative to the bucket, not full URLs —
+// portable across projects/domains and trivial to delete by path later.
+export function photoPublicUrl(path: string): string {
+  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path}`;
+}
+
+// Resolves the `photos` jsonb column (array of storage paths) into public
+// URLs, falling back to the legacy single `image` column for rows that
+// predate multi-photo support (Stage 3) so old data keeps rendering.
+export function resolvePhotos(photoPaths: Photo[] | null | undefined, legacyImage: string | null): Photo[] {
+  if (photoPaths && photoPaths.length > 0) {
+    return photoPaths.map((p) => ({
+      thumb: photoPublicUrl(p.thumb),
+      medium: photoPublicUrl(p.medium),
+      full: photoPublicUrl(p.full),
+    }));
+  }
+  if (legacyImage) {
+    return [{ thumb: legacyImage, medium: legacyImage, full: legacyImage }];
+  }
+  return [];
+}
 
 export async function uploadListingPhoto(
   supabase: SupabaseClient,
-  folder: "tours" | "excursions",
-  slug: string,
-  file: File
-): Promise<string> {
-  const extension = EXTENSIONS[file.type];
-  if (!extension) {
-    throw new Error("Поддерживаются только фото в формате JPEG, PNG или WebP");
-  }
-  if (file.size > MAX_SIZE) {
-    throw new Error("Фото весит больше 5 МБ — сожмите и попробуйте снова");
-  }
-
-  const path = `${folder}/${slug}-${Date.now()}.${extension}`;
+  path: string,
+  blob: Blob
+): Promise<void> {
   const { error } = await supabase.storage
     .from(BUCKET)
-    .upload(path, file, { contentType: file.type });
+    .upload(path, blob, { contentType: "image/webp" });
 
   if (error) {
     throw new Error(`Не удалось загрузить фото: ${error.message}`);
   }
-
-  return supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
 }
 
-// Reads the `photo`/`remove_photo` fields a form may submit and resolves
-// what (if anything) the `image` column should become. Returns `{}` when
-// neither was submitted, so callers can spread the result without
-// overwriting an existing photo on unrelated edits.
-export async function resolvePhotoField(
-  supabase: SupabaseClient,
-  folder: "tours" | "excursions",
-  slug: string,
-  formData: FormData
-): Promise<{ image?: string | null }> {
-  const file = formData.get("photo");
-  if (file instanceof File && file.size > 0) {
-    return { image: await uploadListingPhoto(supabase, folder, slug, file) };
-  }
-  if (formData.get("remove_photo")) {
-    return { image: null };
-  }
-  return {};
+export async function removeListingPhotoFiles(supabase: SupabaseClient, paths: string[]): Promise<void> {
+  await supabase.storage.from(BUCKET).remove(paths);
 }

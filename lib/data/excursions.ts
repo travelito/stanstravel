@@ -4,6 +4,7 @@
 
 import type { Locale } from "@/lib/locales";
 import { supabase } from "@/lib/supabase";
+import { resolvePhotos, type Photo } from "@/lib/storage";
 
 export type Excursion = {
   slug: string;
@@ -14,6 +15,7 @@ export type Excursion = {
   title: Record<Locale, string>;
   summary: Record<Locale, string>;
   image: string | null;
+  photos: Photo[];
 };
 
 type ExcursionRow = {
@@ -25,6 +27,7 @@ type ExcursionRow = {
   title: Record<Locale, string>;
   summary: Record<Locale, string>;
   image: string | null;
+  photos: Photo[];
 };
 
 function rowToExcursion(row: ExcursionRow): Excursion {
@@ -37,6 +40,7 @@ function rowToExcursion(row: ExcursionRow): Excursion {
     title: row.title,
     summary: row.summary,
     image: row.image,
+    photos: resolvePhotos(row.photos, row.image),
   };
 }
 

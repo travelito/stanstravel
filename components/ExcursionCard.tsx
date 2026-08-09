@@ -7,7 +7,7 @@ export function ExcursionCard({ excursion, locale }: { excursion: Excursion; loc
   return (
     <ListingCard
       href={`/${locale}/excursions/${excursion.slug}`}
-      image={excursion.image}
+      image={excursion.photos[0]?.medium ?? null}
       imageAlt={excursion.title[locale]}
       eyebrow={excursion.city}
       title={excursion.title[locale]}

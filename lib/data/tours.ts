@@ -6,6 +6,7 @@
 import type { Locale } from "@/lib/locales";
 import type { Duration } from "@/lib/duration";
 import { supabase } from "@/lib/supabase";
+import { resolvePhotos, type Photo } from "@/lib/storage";
 
 export type Tour = {
   slug: string;
@@ -18,6 +19,7 @@ export type Tour = {
   description: Record<Locale, string[]>; // paragraphs
   highlights: Record<Locale, string[]>;
   image: string | null;
+  photos: Photo[];
 };
 
 // Shape of a row as it comes back from Supabase (snake_case, jsonb columns).
@@ -33,6 +35,7 @@ type TourRow = {
   description: Record<Locale, string[]>;
   highlights: Record<Locale, string[]>;
   image: string | null;
+  photos: Photo[];
 };
 
 function rowToTour(row: TourRow): Tour {
@@ -47,6 +50,7 @@ function rowToTour(row: TourRow): Tour {
     description: row.description,
     highlights: row.highlights,
     image: row.image,
+    photos: resolvePhotos(row.photos, row.image),
   };
 }
 
