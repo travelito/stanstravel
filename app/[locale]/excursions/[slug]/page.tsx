@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
 import { getAllExcursions, getExcursionBySlug } from "@/lib/data/excursions";
+import { ListingImage } from "@/components/ListingImage";
 
 export async function generateStaticParams() {
   const excursions = await getAllExcursions();
@@ -23,6 +24,13 @@ export async function generateMetadata({
     title: `${excursion.title[locale]} — ${t(locale, "siteName")}`,
     description: excursion.summary[locale],
     alternates: { canonical: `/${locale}/excursions/${excursion.slug}` },
+    openGraph: {
+      title: excursion.title[locale],
+      description: excursion.summary[locale],
+      images: excursion.image ? [excursion.image] : [],
+      locale: locale === "ru" ? "ru_RU" : "en_US",
+      type: "website",
+    },
   };
 }
 
@@ -52,6 +60,13 @@ export default async function ExcursionDetailPage({
         {excursion!.city}
       </p>
       <h1 className="font-display text-3xl mt-2">{excursion!.title[locale]}</h1>
+      <div className="relative h-72 w-full mt-6 rounded-lg overflow-hidden">
+        <ListingImage
+          src={excursion!.image}
+          alt={excursion!.title[locale]}
+          sizes="(max-width: 768px) 100vw, 768px"
+        />
+      </div>
       <p className="mt-6 text-ink/90 leading-relaxed">{excursion!.summary[locale]}</p>
       <div className="flex gap-6 mt-6 font-mono text-sm text-ink/70">
         <span>

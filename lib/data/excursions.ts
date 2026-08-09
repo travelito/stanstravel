@@ -13,6 +13,7 @@ export type Excursion = {
   updatedAt: string;
   title: Record<Locale, string>;
   summary: Record<Locale, string>;
+  image: string | null;
 };
 
 type ExcursionRow = {
@@ -23,6 +24,7 @@ type ExcursionRow = {
   updated_at: string;
   title: Record<Locale, string>;
   summary: Record<Locale, string>;
+  image: string | null;
 };
 
 function rowToExcursion(row: ExcursionRow): Excursion {
@@ -34,6 +36,7 @@ function rowToExcursion(row: ExcursionRow): Excursion {
     updatedAt: row.updated_at,
     title: row.title,
     summary: row.summary,
+    image: row.image,
   };
 }
 

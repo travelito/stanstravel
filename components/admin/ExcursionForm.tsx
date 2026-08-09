@@ -1,4 +1,5 @@
 import type { Excursion } from "@/lib/data/excursions";
+import { PhotoField } from "@/components/admin/PhotoField";
 
 const inputClass = "border border-ink/20 rounded-md px-3 py-2 bg-white w-full";
 const labelClass = "flex flex-col gap-1 text-sm";
@@ -94,6 +95,8 @@ export function ExcursionForm({
           />
         </label>
       </div>
+
+      <PhotoField currentImage={excursion?.image} />
 
       {error && <p className="text-sm text-red-700">{error}</p>}
 

@@ -1,4 +1,5 @@
 import type { Tour } from "@/lib/data/tours";
+import { PhotoField } from "@/components/admin/PhotoField";
 
 const inputClass = "border border-ink/20 rounded-md px-3 py-2 bg-white w-full";
 const labelClass = "flex flex-col gap-1 text-sm";
@@ -70,10 +71,7 @@ export function TourForm({
         </label>
       </div>
 
-      <label className={labelClass}>
-        Фото — URL (загрузка файлов появится на следующем этапе)
-        <input type="text" name="image" defaultValue={tour?.image ?? ""} className={inputClass} />
-      </label>
+      <PhotoField currentImage={tour?.image} />
 
       <div className="grid grid-cols-2 gap-4">
         <label className={labelClass}>
