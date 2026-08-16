@@ -5,8 +5,8 @@ import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
 import { getAllTransfers, getTransferBySlug } from "@/lib/data/transfers";
 
-export function generateStaticParams() {
-  const transfers = getAllTransfers();
+export async function generateStaticParams() {
+  const transfers = await getAllTransfers();
   return locales.flatMap((locale) => transfers.map((tr) => ({ locale, slug: tr.slug })));
 }
 
@@ -17,7 +17,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   if (!isLocale(params.locale)) return {};
   const locale = params.locale as Locale;
-  const transfer = getTransferBySlug(params.slug);
+  const transfer = await getTransferBySlug(params.slug);
   if (!transfer) return {};
   return {
     title: `${transfer.title[locale]} — ${t(locale, "siteName")}`,
@@ -26,14 +26,14 @@ export async function generateMetadata({
   };
 }
 
-export default function TransferDetailPage({
+export default async function TransferDetailPage({
   params,
 }: {
   params: { locale: string; slug: string };
 }) {
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
-  const transfer = getTransferBySlug(params.slug);
+  const transfer = await getTransferBySlug(params.slug);
   if (!transfer) notFound();
 
   return (

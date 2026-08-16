@@ -5,8 +5,8 @@ import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
 import { getAllTrainTickets, getTrainTicketBySlug } from "@/lib/data/train-tickets";
 
-export function generateStaticParams() {
-  const tickets = getAllTrainTickets();
+export async function generateStaticParams() {
+  const tickets = await getAllTrainTickets();
   return locales.flatMap((locale) => tickets.map((tt) => ({ locale, slug: tt.slug })));
 }
 
@@ -17,7 +17,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   if (!isLocale(params.locale)) return {};
   const locale = params.locale as Locale;
-  const ticket = getTrainTicketBySlug(params.slug);
+  const ticket = await getTrainTicketBySlug(params.slug);
   if (!ticket) return {};
   return {
     title: `${ticket.title[locale]} — ${t(locale, "siteName")}`,
@@ -26,14 +26,14 @@ export async function generateMetadata({
   };
 }
 
-export default function TrainTicketDetailPage({
+export default async function TrainTicketDetailPage({
   params,
 }: {
   params: { locale: string; slug: string };
 }) {
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
-  const ticket = getTrainTicketBySlug(params.slug);
+  const ticket = await getTrainTicketBySlug(params.slug);
   if (!ticket) notFound();
 
   const jsonLd = {

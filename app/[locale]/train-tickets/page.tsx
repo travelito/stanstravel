@@ -22,10 +22,10 @@ export async function generateMetadata({
   };
 }
 
-export default function TrainTicketsPage({ params }: { params: { locale: string } }) {
+export default async function TrainTicketsPage({ params }: { params: { locale: string } }) {
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
-  const tickets = getAllTrainTickets();
+  const tickets = await getAllTrainTickets();
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-16">

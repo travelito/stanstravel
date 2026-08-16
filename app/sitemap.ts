@@ -11,6 +11,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = [];
   const allTours = await getAllTours();
   const allExcursions = await getAllExcursions();
+  const allTransfers = await getAllTransfers();
+  const allTrainTickets = await getAllTrainTickets();
 
   for (const locale of locales) {
     // Static routes
@@ -63,7 +65,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       });
     }
 
-    for (const transfer of getAllTransfers()) {
+    for (const transfer of allTransfers) {
       entries.push({
         url: `${siteUrl}/${locale}/transfers/${transfer.slug}`,
         lastModified: new Date(transfer.updatedAt),
@@ -71,7 +73,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       });
     }
 
-    for (const ticket of getAllTrainTickets()) {
+    for (const ticket of allTrainTickets) {
       entries.push({
         url: `${siteUrl}/${locale}/train-tickets/${ticket.slug}`,
         lastModified: new Date(ticket.updatedAt),
