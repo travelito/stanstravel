@@ -30,3 +30,12 @@ export async function removeExcursionPhoto(slug: string, index: number): Promise
   revalidateExcursionPaths(slug);
   return {};
 }
+
+export async function reorderExcursionPhoto(slug: string, from: number, to: number): Promise<{ error?: string }> {
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("reorder_excursion_photo", { p_slug: slug, p_from: from, p_to: to });
+  if (error) return { error: error.message };
+
+  revalidateExcursionPaths(slug);
+  return {};
+}

@@ -4,8 +4,8 @@ import { useCallback, useRef, useState } from "react";
 import { createClient } from "@/lib/auth/supabase-browser";
 import { compressToWebp } from "@/lib/photo-compress";
 import { uploadListingPhoto, photoPublicUrl, ALLOWED_PHOTO_TYPES, MAX_PHOTO_SIZE, type Photo } from "@/lib/storage";
-import { addTourPhoto, removeTourPhoto } from "@/app/admin/tours/photos";
-import { addExcursionPhoto, removeExcursionPhoto } from "@/app/admin/excursions/photos";
+import { addTourPhoto, removeTourPhoto, reorderTourPhoto } from "@/app/admin/tours/photos";
+import { addExcursionPhoto, removeExcursionPhoto, reorderExcursionPhoto } from "@/app/admin/excursions/photos";
 
 type PendingFile = {
   id: string;
@@ -36,10 +36,12 @@ export function PhotoUploader({
   const [pending, setPending] = useState<PendingFile[]>([]);
   const [limitWarning, setLimitWarning] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
   const countRef = useRef(initialPhotos.length);
 
   const addPhotoAction = entity === "tours" ? addTourPhoto : addExcursionPhoto;
   const removePhotoAction = entity === "tours" ? removeTourPhoto : removeExcursionPhoto;
+  const reorderPhotoAction = entity === "tours" ? reorderTourPhoto : reorderExcursionPhoto;
 
   const processFile = useCallback(
     async (file: File, id: string) => {
@@ -133,6 +135,21 @@ export function PhotoUploader({
     setLimitWarning(null);
   };
 
+  const handleMove = async (from: number, to: number) => {
+    if (!slug || to < 0 || to >= photos.length || from === to) return;
+    const prev = photos;
+    const next = [...photos];
+    const [item] = next.splice(from, 1);
+    next.splice(to, 0, item);
+    setPhotos(next);
+
+    const result = await reorderPhotoAction(slug, from, to);
+    if (result.error) {
+      setPhotos(prev);
+      window.alert(`Не удалось изменить порядок: ${result.error}`);
+    }
+  };
+
   if (!slug) {
     return (
       <p className="text-sm text-ink/60 border border-dashed border-ink/20 rounded-md px-4 py-6 text-center">
@@ -147,7 +164,19 @@ export function PhotoUploader({
         <div className="grid grid-cols-4 sm:grid-cols-5 gap-3">
           {photos.map((photo, i) => (
             // eslint-disable-next-line @next/next/no-img-element
-            <div key={photo.thumb + i} className="relative group">
+            <div
+              key={photo.thumb + i}
+              draggable
+              onDragStart={() => setDragIndex(i)}
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                e.preventDefault();
+                if (dragIndex !== null) handleMove(dragIndex, i);
+                setDragIndex(null);
+              }}
+              onDragEnd={() => setDragIndex(null)}
+              className="relative group cursor-grab active:cursor-grabbing"
+            >
               <img src={photo.thumb} alt="" className="h-20 w-full object-cover rounded-md" />
               <button
                 type="button"
@@ -157,6 +186,26 @@ export function PhotoUploader({
               >
                 ×
               </button>
+              <div className="absolute bottom-1 inset-x-1 flex justify-between">
+                <button
+                  type="button"
+                  onClick={() => handleMove(i, i - 1)}
+                  disabled={i === 0}
+                  aria-label="Сдвинуть влево"
+                  className="bg-ink text-plaster rounded-full h-5 w-5 text-xs leading-5 text-center hover:bg-turquoise disabled:opacity-30 disabled:hover:bg-ink"
+                >
+                  ‹
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleMove(i, i + 1)}
+                  disabled={i === photos.length - 1}
+                  aria-label="Сдвинуть вправо"
+                  className="bg-ink text-plaster rounded-full h-5 w-5 text-xs leading-5 text-center hover:bg-turquoise disabled:opacity-30 disabled:hover:bg-ink"
+                >
+                  ›
+                </button>
+              </div>
             </div>
           ))}
         </div>

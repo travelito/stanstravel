@@ -32,3 +32,12 @@ export async function removeTourPhoto(slug: string, index: number): Promise<{ er
   revalidateTourPaths(slug);
   return {};
 }
+
+export async function reorderTourPhoto(slug: string, from: number, to: number): Promise<{ error?: string }> {
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("reorder_tour_photo", { p_slug: slug, p_from: from, p_to: to });
+  if (error) return { error: error.message };
+
+  revalidateTourPaths(slug);
+  return {};
+}
