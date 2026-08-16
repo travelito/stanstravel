@@ -44,7 +44,7 @@ export default async function TransfersPage({ params }: { params: { locale: stri
             className="block border border-ink/10 rounded-lg p-5 bg-white/40 hover:border-turquoise transition-colors"
           >
             <p className="font-mono text-xs text-turquoise uppercase tracking-wide">
-              {tr.fromCity} → {tr.toCity}
+              {tr.fromCity} → {tr.toCity} · {tr.transportType}
             </p>
             <h2 className="font-display text-lg mt-1">{tr.title[locale]}</h2>
             <p className="text-sm text-ink/70 mt-2">{tr.summary[locale]}</p>

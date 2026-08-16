@@ -27,6 +27,20 @@ export default async function AdminDashboardPage() {
           <h2 className="font-display text-lg">Экскурсии</h2>
           <p className="text-sm text-ink/60 mt-1">Список, создание, правка, удаление</p>
         </Link>
+        <Link
+          href="/admin/transfers"
+          className="block rounded-lg border border-ink/10 bg-white p-6 hover:border-turquoise transition-colors"
+        >
+          <h2 className="font-display text-lg">Трансферы</h2>
+          <p className="text-sm text-ink/60 mt-1">Список, создание, правка, удаление</p>
+        </Link>
+        <Link
+          href="/admin/train-tickets"
+          className="block rounded-lg border border-ink/10 bg-white p-6 hover:border-turquoise transition-colors"
+        >
+          <h2 className="font-display text-lg">Жд-билеты</h2>
+          <p className="text-sm text-ink/60 mt-1">Список, создание, правка, удаление</p>
+        </Link>
       </div>
     </div>
   );

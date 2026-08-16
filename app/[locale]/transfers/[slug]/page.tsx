@@ -49,7 +49,7 @@ export default async function TransferDetailPage({
         / {transfer!.title[locale]}
       </nav>
       <p className="font-mono text-xs text-turquoise uppercase tracking-wide">
-        {transfer!.fromCity} → {transfer!.toCity}
+        {transfer!.fromCity} → {transfer!.toCity} · {transfer!.transportType}
       </p>
       <h1 className="font-display text-3xl mt-2">{transfer!.title[locale]}</h1>
       <p className="mt-6 text-ink/90 leading-relaxed">{transfer!.summary[locale]}</p>

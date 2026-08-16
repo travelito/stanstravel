@@ -9,6 +9,7 @@ export type Transfer = {
   slug: string;
   fromCity: string;
   toCity: string;
+  transportType: string;
   priceUsd: number;
   durationHours: number;
   updatedAt: string;
@@ -20,6 +21,7 @@ type TransferRow = {
   slug: string;
   from_city: string;
   to_city: string;
+  transport_type: string;
   price_usd: number;
   duration_hours: number;
   updated_at: string;
@@ -32,6 +34,7 @@ function rowToTransfer(row: TransferRow): Transfer {
     slug: row.slug,
     fromCity: row.from_city,
     toCity: row.to_city,
+    transportType: row.transport_type,
     priceUsd: row.price_usd,
     durationHours: row.duration_hours,
     updatedAt: row.updated_at,
