@@ -32,7 +32,7 @@ export function ShareButton({ label }: { label: string }) {
       onClick={handleShare}
       aria-label={label}
       title={label}
-      className="inline-flex items-center justify-center w-8 h-8 rounded-full border border-ink/15 text-ink/60 hover:text-turquoise hover:border-turquoise transition-colors"
+      className="inline-flex items-center justify-center w-11 h-11 rounded-full border border-ink/15 text-ink/60 hover:text-turquoise hover:border-turquoise transition-colors"
     >
       {copied ? (
         <span className="text-[10px] font-mono">✓</span>

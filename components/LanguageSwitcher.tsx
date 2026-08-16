@@ -9,18 +9,18 @@ export function LanguageSwitcher({ currentLocale }: { currentLocale: Locale }) {
   // Strip the leading /<locale> segment so we can rebuild the path for the other locale.
   const path = pathname.replace(/^\/[a-z]{2}/, "");
   return (
-    <div className="flex items-center gap-1 text-sm font-mono" aria-label="Language switcher">
+    <div className="flex items-center text-sm font-mono" aria-label="Language switcher">
       {locales.map((locale, i) => (
-        <span key={locale} className="flex items-center gap-1">
+        <span key={locale} className="flex items-center">
           {i > 0 && <span className="text-ink/30">/</span>}
           <Link
             href={`/${locale}${path}`}
             aria-current={locale === currentLocale ? "true" : undefined}
-            className={
+            className={`inline-flex items-center justify-center min-w-[44px] h-11 rounded-md hover:bg-ink/5 transition-colors ${
               locale === currentLocale
                 ? "text-indigo font-semibold"
                 : "text-ink/50 hover:text-ink"
-            }
+            }`}
           >
             {locale.toUpperCase()}
           </Link>
