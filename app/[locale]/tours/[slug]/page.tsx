@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
 import { formatDuration } from "@/lib/duration";
+import { whatsappNumber } from "@/lib/contact";
 import { getAllTours, getTourBySlug } from "@/lib/data/tours";
 import { ListingImage } from "@/components/ListingImage";
 import { PhotoGallery } from "@/components/PhotoGallery";
@@ -55,8 +56,12 @@ export default async function TourDetailPage({
     touristType: "Sightseeing",
   };
 
+  const whatsappHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+    `${t(locale, "inquiryPrefix")} «${tour!.title[locale]}»`
+  )}`;
+
   return (
-    <article className="mx-auto max-w-3xl px-6 py-16">
+    <article className="mx-auto max-w-5xl px-6 py-10 sm:py-12">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -75,8 +80,15 @@ export default async function TourDetailPage({
 
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="font-mono text-xs text-turquoise uppercase tracking-wide">{tour!.city}</p>
-          <h1 className="font-display text-3xl sm:text-4xl mt-2">{tour!.title[locale]}</h1>
+          <p className="font-mono text-sm font-semibold uppercase tracking-wide text-turquoise">
+            {tour!.city}
+          </p>
+          <h1 className="font-display text-3xl sm:text-4xl font-semibold leading-tight text-ink mt-1">
+            {tour!.title[locale]}
+          </h1>
+          <p className="mt-3 font-mono text-sm text-ink/60">
+            {t(locale, "duration")}: {formatDuration(tour!.duration, locale)}
+          </p>
         </div>
         <ShareButton label={t(locale, "share")} locale={locale} />
       </div>
@@ -85,33 +97,46 @@ export default async function TourDetailPage({
         {tour!.photos.length > 0 ? (
           <PhotoGallery photos={tour!.photos} alt={tour!.title[locale]} locale={locale} />
         ) : (
-          <div className="relative h-72 w-full rounded-lg overflow-hidden">
-            <ListingImage src={null} alt={tour!.title[locale]} sizes="(max-width: 768px) 100vw, 768px" />
+          <div className="relative h-72 sm:h-[420px] w-full rounded-xl overflow-hidden">
+            <ListingImage src={null} alt={tour!.title[locale]} sizes="(max-width: 640px) 100vw, 66vw" />
           </div>
         )}
       </div>
 
-      <div className="flex gap-6 mt-6 font-mono text-sm text-ink/70">
-        <span>
-          {t(locale, "duration")}: {formatDuration(tour!.duration, locale)}
-        </span>
-        <span className="text-indigo font-semibold">
-          {t(locale, "fromPrice")} ${tour!.priceUsd} {t(locale, "perPerson")}
-        </span>
-      </div>
+      <div className="mt-10 grid gap-10 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <div className="space-y-4 text-ink/90 leading-relaxed">
+            {tour!.description[locale].map((paragraph, i) => (
+              <p key={i}>{paragraph}</p>
+            ))}
+          </div>
 
-      <div className="mt-8 space-y-4 text-ink/90 leading-relaxed">
-        {tour!.description[locale].map((paragraph, i) => (
-          <p key={i}>{paragraph}</p>
-        ))}
-      </div>
+          <h2 className="font-display text-xl font-semibold mt-10 mb-3">{t(locale, "highlights")}</h2>
+          <ul className="list-disc list-inside space-y-1 text-ink/80">
+            {tour!.highlights[locale].map((h) => (
+              <li key={h}>{h}</li>
+            ))}
+          </ul>
+        </div>
 
-      <h2 className="font-display text-xl mt-10 mb-3">{t(locale, "highlights")}</h2>
-      <ul className="list-disc list-inside space-y-1 text-ink/80">
-        {tour!.highlights[locale].map((h) => (
-          <li key={h}>{h}</li>
-        ))}
-      </ul>
+        <aside className="order-first lg:order-last">
+          <div className="lg:sticky lg:top-24 rounded-xl border border-ink/10 bg-white p-6 shadow-sm">
+            <p className="font-mono text-xs uppercase tracking-wide text-ink/50">{t(locale, "fromPrice")}</p>
+            <p className="font-display text-3xl font-semibold text-indigo mt-1">
+              ${tour!.priceUsd}{" "}
+              <span className="font-body text-sm font-normal text-ink/50">{t(locale, "perPerson")}</span>
+            </p>
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-5 block text-center bg-indigo text-plaster px-5 py-3 rounded-md hover:bg-turquoise transition-colors font-body"
+            >
+              {t(locale, "contactsWhatsapp")}
+            </a>
+          </div>
+        </aside>
+      </div>
 
       <Link
         href={`/${locale}/tours`}

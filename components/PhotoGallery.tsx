@@ -35,10 +35,10 @@ export function PhotoGallery({ photos, alt, locale }: { photos: Photo[]; alt: st
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lightboxOpen, selected]);
 
-  const onTouchStart = (e: React.TouchEvent) => {
+  const onLightboxTouchStart = (e: React.TouchEvent) => {
     touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
   };
-  const onTouchEnd = (e: React.TouchEvent) => {
+  const onLightboxTouchEnd = (e: React.TouchEvent) => {
     if (touchStart.current === null) return;
     const dx = e.changedTouches[0].clientX - touchStart.current.x;
     const dy = e.changedTouches[0].clientY - touchStart.current.y;
@@ -52,35 +52,50 @@ export function PhotoGallery({ photos, alt, locale }: { photos: Photo[]; alt: st
     else if (dx < -SWIPE_THRESHOLD) goTo(selected + 1);
   };
 
+  // Swiping the inline hero photo just switches the selected photo — it
+  // doesn't open or close anything, unlike the lightbox swipe above.
+  const onMainTouchStart = (e: React.TouchEvent) => {
+    touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  };
+  const onMainTouchEnd = (e: React.TouchEvent) => {
+    if (touchStart.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStart.current.x;
+    touchStart.current = null;
+    if (dx > SWIPE_THRESHOLD) goTo(selected - 1);
+    else if (dx < -SWIPE_THRESHOLD) goTo(selected + 1);
+  };
+
   return (
-    <div>
+    <div className={`grid gap-2 ${photos.length > 1 ? "sm:grid-cols-[2fr_1fr] sm:h-[420px]" : ""}`}>
       <button
         type="button"
         onClick={() => setLightboxOpen(true)}
+        onTouchStart={onMainTouchStart}
+        onTouchEnd={onMainTouchEnd}
         aria-label="Открыть фото на весь экран"
-        className="relative h-72 w-full rounded-lg overflow-hidden block cursor-zoom-in"
+        className="relative h-72 sm:h-full w-full rounded-xl overflow-hidden block cursor-zoom-in"
       >
         <Image
           src={active.full}
           alt={alt}
           fill
           className="object-cover"
-          sizes="(max-width: 768px) 100vw, 768px"
+          sizes="(max-width: 640px) 100vw, 66vw"
         />
       </button>
       {photos.length > 1 && (
-        <div className="flex gap-2 mt-3 overflow-x-auto">
+        <div className="flex gap-2 overflow-x-auto pb-1 sm:h-full sm:flex-col sm:overflow-x-visible sm:overflow-y-auto sm:pb-0">
           {photos.map((photo, i) => (
             <button
               key={photo.thumb + i}
               type="button"
               onClick={() => setSelected(i)}
               aria-label={`Фото ${i + 1}`}
-              className={`relative h-16 w-20 flex-shrink-0 rounded-md overflow-hidden border-2 transition-colors ${
+              className={`relative h-16 w-20 flex-shrink-0 rounded-md overflow-hidden border-2 transition-colors sm:h-auto sm:w-full sm:min-h-[4.5rem] sm:flex-1 ${
                 i === selected ? "border-turquoise" : "border-transparent"
               }`}
             >
-              <Image src={photo.thumb} alt="" fill className="object-cover" sizes="80px" />
+              <Image src={photo.thumb} alt="" fill className="object-cover" sizes="96px" />
             </button>
           ))}
         </div>
@@ -89,8 +104,8 @@ export function PhotoGallery({ photos, alt, locale }: { photos: Photo[]; alt: st
       {lightboxOpen && (
         <div
           className="fixed inset-0 z-50 bg-ink/95 flex items-center justify-center"
-          onTouchStart={onTouchStart}
-          onTouchEnd={onTouchEnd}
+          onTouchStart={onLightboxTouchStart}
+          onTouchEnd={onLightboxTouchEnd}
         >
           <button
             type="button"

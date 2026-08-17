@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
+import { whatsappNumber } from "@/lib/contact";
 import { getAllExcursions, getExcursionBySlug } from "@/lib/data/excursions";
 import { ListingImage } from "@/components/ListingImage";
 import { PhotoGallery } from "@/components/PhotoGallery";
@@ -46,8 +47,12 @@ export default async function ExcursionDetailPage({
   const excursion = await getExcursionBySlug(params.slug);
   if (!excursion) notFound();
 
+  const whatsappHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+    `${t(locale, "inquiryPrefix")} «${excursion!.title[locale]}»`
+  )}`;
+
   return (
-    <article className="mx-auto max-w-3xl px-6 py-16">
+    <article className="mx-auto max-w-5xl px-6 py-10 sm:py-12">
       <nav aria-label="breadcrumb" className="text-sm text-ink/50 mb-6 font-mono">
         <Link href={`/${locale}`} className="hover:text-turquoise">
           {t(locale, "navHome")}
@@ -58,38 +63,64 @@ export default async function ExcursionDetailPage({
         </Link>{" "}
         / {excursion!.title[locale]}
       </nav>
+
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="font-mono text-xs text-turquoise uppercase tracking-wide">
+          <p className="font-mono text-sm font-semibold uppercase tracking-wide text-turquoise">
             {excursion!.city}
           </p>
-          <h1 className="font-display text-3xl mt-2">{excursion!.title[locale]}</h1>
+          <h1 className="font-display text-3xl sm:text-4xl font-semibold leading-tight text-ink mt-1">
+            {excursion!.title[locale]}
+          </h1>
+          <p className="mt-3 font-mono text-sm text-ink/60">
+            {t(locale, "duration")}: {excursion!.durationHours} {t(locale, "hours")}
+          </p>
         </div>
         <ShareButton label={t(locale, "share")} locale={locale} />
       </div>
+
       <div className="mt-6">
         {excursion!.photos.length > 0 ? (
           <PhotoGallery photos={excursion!.photos} alt={excursion!.title[locale]} locale={locale} />
         ) : (
-          <div className="relative h-72 w-full rounded-lg overflow-hidden">
-            <ListingImage src={null} alt={excursion!.title[locale]} sizes="(max-width: 768px) 100vw, 768px" />
+          <div className="relative h-72 sm:h-[420px] w-full rounded-xl overflow-hidden">
+            <ListingImage
+              src={null}
+              alt={excursion!.title[locale]}
+              sizes="(max-width: 640px) 100vw, 66vw"
+            />
           </div>
         )}
       </div>
-      <p className="mt-6 text-ink/90 leading-relaxed">{excursion!.summary[locale]}</p>
-      <div className="flex gap-6 mt-6 font-mono text-sm text-ink/70">
-        <span>
-          {t(locale, "duration")}: {excursion!.durationHours} {t(locale, "hours")}
-        </span>
-        <span className="text-indigo font-semibold">
-          {t(locale, "fromPrice")} ${excursion!.priceUsd}
-        </span>
+
+      <div className="mt-10 grid gap-10 lg:grid-cols-3">
+        <div className="lg:col-span-2 text-ink/90 leading-relaxed">
+          <p>{excursion!.summary[locale]}</p>
+        </div>
+
+        <aside className="order-first lg:order-last">
+          <div className="lg:sticky lg:top-24 rounded-xl border border-ink/10 bg-white p-6 shadow-sm">
+            <p className="font-mono text-xs uppercase tracking-wide text-ink/50">{t(locale, "fromPrice")}</p>
+            <p className="font-display text-3xl font-semibold text-indigo mt-1">
+              ${excursion!.priceUsd}
+            </p>
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-5 block text-center bg-indigo text-plaster px-5 py-3 rounded-md hover:bg-turquoise transition-colors font-body"
+            >
+              {t(locale, "contactsWhatsapp")}
+            </a>
+          </div>
+        </aside>
       </div>
+
       <Link
         href={`/${locale}/excursions`}
         className="inline-block mt-10 text-turquoise hover:text-indigo font-mono text-sm"
       >
-        ← {t(locale, "backToTours")}
+        ← {t(locale, "backToExcursions")}
       </Link>
     </article>
   );
