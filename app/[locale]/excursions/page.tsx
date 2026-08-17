@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
 import { cityLabel } from "@/lib/cities";
-import { getAllExcursions } from "@/lib/data/excursions";
+import { getAllExcursions, groupExcursionsByCity } from "@/lib/data/excursions";
 import { ExcursionCard } from "@/components/ExcursionCard";
+import { CityFilterTabs } from "@/components/CityFilterTabs";
 import { notFound } from "next/navigation";
 
 export function generateStaticParams() {
@@ -34,13 +34,12 @@ export default async function ExcursionsPage({
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const allExcursions = await getAllExcursions();
+  const grouped = groupExcursionsByCity(allExcursions, locale);
+  const cityOrder = grouped.map(([city]) => city);
 
   const requestedCity = searchParams.city;
-  const cityIsValid = Boolean(requestedCity && allExcursions.some((e) => e.city === requestedCity));
-  const activeCity = cityIsValid ? requestedCity! : null;
-  const excursions = activeCity
-    ? allExcursions.filter((e) => e.city === activeCity)
-    : allExcursions;
+  const activeCity = requestedCity && cityOrder.includes(requestedCity) ? requestedCity : null;
+  const sections = activeCity ? grouped.filter(([city]) => city === activeCity) : grouped;
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-16">
@@ -50,22 +49,25 @@ export default async function ExcursionsPage({
         </a>{" "}
         / {t(locale, "excursionsTitle")}
       </nav>
-      <h1 className={`font-display text-3xl ${activeCity ? "mb-2" : "mb-8"}`}>
-        {t(locale, "excursionsTitle")}
-      </h1>
-      {activeCity && (
-        <p className="mb-8 font-mono text-sm text-ink/50">
-          {t(locale, "filteredByCity")}: {cityLabel(activeCity, locale)} ·{" "}
-          <Link href={`/${locale}/excursions`} className="text-turquoise hover:text-indigo">
-            {t(locale, "showAll")}
-          </Link>
-        </p>
-      )}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {excursions.map((excursion) => (
-          <ExcursionCard key={excursion.slug} excursion={excursion} locale={locale} />
-        ))}
-      </div>
+      <h1 className="font-display text-3xl mb-8">{t(locale, "excursionsTitle")}</h1>
+
+      <CityFilterTabs
+        cities={cityOrder}
+        activeCity={activeCity}
+        locale={locale}
+        basePath={`/${locale}/excursions`}
+      />
+
+      {sections.map(([city, items]) => (
+        <div key={city} className="mb-14">
+          <h2 className="font-display text-2xl mb-6">{cityLabel(city, locale)}</h2>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {items.map((excursion) => (
+              <ExcursionCard key={excursion.slug} excursion={excursion} locale={locale} />
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

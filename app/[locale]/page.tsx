@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
 import { getAllTours } from "@/lib/data/tours";
-import { getAllExcursions } from "@/lib/data/excursions";
+import { getAllExcursions, groupExcursionsByCity } from "@/lib/data/excursions";
 import { TourCard } from "@/components/TourCard";
 import { CityExcursionRow } from "@/components/CityExcursionRow";
 import { RouteMap } from "@/components/RouteMap";
@@ -44,20 +44,7 @@ export default async function HomePage({
   const tours = await getAllTours();
   const excursions = await getAllExcursions();
 
-  const excursionsByCity = Object.entries(
-    excursions.reduce<Record<string, typeof excursions>>((acc, excursion) => {
-      (acc[excursion.city] ??= []).push(excursion);
-      return acc;
-    }, {})
-  )
-    .map(
-      ([city, items]) =>
-        [
-          city,
-          [...items].sort((a, b) => a.title[locale].localeCompare(b.title[locale], locale)),
-        ] as const
-    )
-    .sort((a, b) => b[1].length - a[1].length);
+  const excursionsByCity = groupExcursionsByCity(excursions, locale);
 
   const jsonLd = {
     "@context": "https://schema.org",

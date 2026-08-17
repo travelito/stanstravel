@@ -57,6 +57,27 @@ export async function getAllExcursions(): Promise<Excursion[]> {
   return (data as ExcursionRow[]).map(rowToExcursion);
 }
 
+// Groups excursions by city, cities ordered by excursion count (descending)
+// and excursions within a city ordered alphabetically by localized title.
+export function groupExcursionsByCity(
+  excursions: Excursion[],
+  locale: Locale
+): [string, Excursion[]][] {
+  return Object.entries(
+    excursions.reduce<Record<string, Excursion[]>>((acc, excursion) => {
+      (acc[excursion.city] ??= []).push(excursion);
+      return acc;
+    }, {})
+  )
+    .map(
+      ([city, items]): [string, Excursion[]] => [
+        city,
+        [...items].sort((a, b) => a.title[locale].localeCompare(b.title[locale], locale)),
+      ]
+    )
+    .sort((a, b) => b[1].length - a[1].length);
+}
+
 export async function getExcursionBySlug(
   slug: string
 ): Promise<Excursion | undefined> {
