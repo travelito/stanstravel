@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
 import { getAllTransfers, getTransferBySlug } from "@/lib/data/transfers";
+import { ListingImage } from "@/components/ListingImage";
 
 export async function generateStaticParams() {
   const transfers = await getAllTransfers();
@@ -23,6 +24,13 @@ export async function generateMetadata({
     title: `${transfer.title[locale]} — ${t(locale, "siteName")}`,
     description: transfer.summary[locale],
     alternates: { canonical: `/${locale}/transfers/${transfer.slug}` },
+    openGraph: {
+      title: transfer.title[locale],
+      description: transfer.summary[locale],
+      images: transfer.photos[0] ? [transfer.photos[0].full] : [],
+      locale: locale === "ru" ? "ru_RU" : "en_US",
+      type: "website",
+    },
   };
 }
 
@@ -48,7 +56,14 @@ export default async function TransferDetailPage({
         </Link>{" "}
         / {transfer!.title[locale]}
       </nav>
-      <p className="font-mono text-xs text-turquoise uppercase tracking-wide">
+      <div className="relative h-72 w-full rounded-lg overflow-hidden">
+        <ListingImage
+          src={transfer!.photos[0]?.full ?? null}
+          alt={transfer!.title[locale]}
+          sizes="(max-width: 768px) 100vw, 768px"
+        />
+      </div>
+      <p className="font-mono text-xs text-turquoise uppercase tracking-wide mt-6">
         {transfer!.fromCity} → {transfer!.toCity} · {transfer!.transportType}
       </p>
       <h1 className="font-display text-3xl mt-2">{transfer!.title[locale]}</h1>

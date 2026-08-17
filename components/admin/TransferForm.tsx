@@ -1,4 +1,5 @@
 import type { Transfer } from "@/lib/data/transfers";
+import { PhotoUploader } from "@/components/admin/PhotoUploader";
 
 const inputClass = "border border-ink/20 rounded-md px-3 py-2 bg-white w-full";
 const labelClass = "flex flex-col gap-1 text-sm";
@@ -15,7 +16,13 @@ export function TransferForm({
   const isEdit = Boolean(transfer);
 
   return (
-    <form action={action} className="flex flex-col gap-5 max-w-2xl">
+    <div className="flex flex-col gap-8 max-w-2xl">
+      <div>
+        <p className="text-sm font-medium mb-3">Фото (до 10)</p>
+        <PhotoUploader slug={transfer?.slug} entity="transfers" initialPhotos={transfer?.photos ?? []} />
+      </div>
+
+      <form action={action} className="flex flex-col gap-5">
       <label className={labelClass}>
         Slug (латиница, дефисы; часть URL, не меняется после создания)
         <input
@@ -120,6 +127,7 @@ export function TransferForm({
       >
         {isEdit ? "Сохранить" : "Создать"}
       </button>
-    </form>
+      </form>
+    </div>
   );
 }

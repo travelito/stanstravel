@@ -4,6 +4,7 @@
 
 import type { Locale } from "@/lib/locales";
 import { supabase } from "@/lib/supabase";
+import { resolvePhotos, type Photo } from "@/lib/storage";
 
 export type Transfer = {
   slug: string;
@@ -15,6 +16,7 @@ export type Transfer = {
   updatedAt: string;
   title: Record<Locale, string>;
   summary: Record<Locale, string>;
+  photos: Photo[];
 };
 
 type TransferRow = {
@@ -27,6 +29,7 @@ type TransferRow = {
   updated_at: string;
   title: Record<Locale, string>;
   summary: Record<Locale, string>;
+  photos: Photo[];
 };
 
 function rowToTransfer(row: TransferRow): Transfer {
@@ -40,6 +43,7 @@ function rowToTransfer(row: TransferRow): Transfer {
     updatedAt: row.updated_at,
     title: row.title,
     summary: row.summary,
+    photos: resolvePhotos(row.photos, null),
   };
 }
 

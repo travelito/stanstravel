@@ -6,6 +6,7 @@ import { compressToWebp } from "@/lib/photo-compress";
 import { uploadListingPhoto, photoPublicUrl, ALLOWED_PHOTO_TYPES, MAX_PHOTO_SIZE, type Photo } from "@/lib/storage";
 import { addTourPhoto, removeTourPhoto, reorderTourPhoto } from "@/app/admin/tours/photos";
 import { addExcursionPhoto, removeExcursionPhoto, reorderExcursionPhoto } from "@/app/admin/excursions/photos";
+import { addTransferPhoto, removeTransferPhoto, reorderTransferPhoto } from "@/app/admin/transfers/photos";
 
 type PendingFile = {
   id: string;
@@ -29,7 +30,7 @@ export function PhotoUploader({
   initialPhotos,
 }: {
   slug?: string;
-  entity: "tours" | "excursions";
+  entity: "tours" | "excursions" | "transfers";
   initialPhotos: Photo[];
 }) {
   const [photos, setPhotos] = useState(initialPhotos);
@@ -39,9 +40,16 @@ export function PhotoUploader({
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const countRef = useRef(initialPhotos.length);
 
-  const addPhotoAction = entity === "tours" ? addTourPhoto : addExcursionPhoto;
-  const removePhotoAction = entity === "tours" ? removeTourPhoto : removeExcursionPhoto;
-  const reorderPhotoAction = entity === "tours" ? reorderTourPhoto : reorderExcursionPhoto;
+  const addPhotoAction =
+    entity === "tours" ? addTourPhoto : entity === "excursions" ? addExcursionPhoto : addTransferPhoto;
+  const removePhotoAction =
+    entity === "tours" ? removeTourPhoto : entity === "excursions" ? removeExcursionPhoto : removeTransferPhoto;
+  const reorderPhotoAction =
+    entity === "tours"
+      ? reorderTourPhoto
+      : entity === "excursions"
+        ? reorderExcursionPhoto
+        : reorderTransferPhoto;
 
   const processFile = useCallback(
     async (file: File, id: string) => {
