@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { locales, isLocale, type Locale } from "@/lib/locales";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { QuickContact } from "@/components/QuickContact";
 import "@/app/globals.css";
 
 export function generateStaticParams() {
@@ -44,6 +45,7 @@ export default function LocaleLayout({
         <Header locale={locale} />
         <main className="flex-1">{children}</main>
         <Footer locale={locale} />
+        <QuickContact locale={locale} />
       </body>
     </html>
   );

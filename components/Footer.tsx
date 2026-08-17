@@ -1,7 +1,6 @@
 import type { Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
-
-const phone = "+998 99 015 21 10";
+import { phone } from "@/lib/contact";
 
 export function Footer({ locale }: { locale: Locale }) {
   return (

@@ -3,10 +3,7 @@ import Link from "next/link";
 import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
 import { notFound } from "next/navigation";
-
-// Central place for real contact details — update here and it changes everywhere it's used.
-const phone = "+998 99 015 21 10";
-const whatsappNumber = "998990152110"; // digits only, used for the wa.me link
+import { phone, whatsappNumber } from "@/lib/contact";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
