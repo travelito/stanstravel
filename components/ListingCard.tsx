@@ -33,7 +33,7 @@ export function ListingCard({
       </div>
       <Link href={href} className="flex flex-1 flex-col p-5">
         <p className="font-mono text-[11px] uppercase tracking-wide text-turquoise">{eyebrow}</p>
-        <h3 className="mt-1.5 font-display text-lg font-semibold leading-snug text-ink group-hover:text-indigo">
+        <h3 className="mt-1.5 font-display text-lg font-semibold leading-snug text-ink group-hover:text-indigo group-hover:underline">
           {title}
         </h3>
         <p className="mt-2 font-mono text-xs text-ink/50">{duration}</p>
