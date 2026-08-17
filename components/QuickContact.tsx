@@ -65,9 +65,9 @@ export function QuickContact({ locale }: { locale: Locale }) {
   const telHref = `tel:${phone.replace(/\s/g, "")}`;
 
   const links = [
-    { href: telHref, label: t(locale, "quickContactCall"), bg: "bg-ink", icon: <CallIcon /> },
     { href: telegramHref, label: t(locale, "quickContactTelegram"), bg: "bg-[#229ED9]", icon: <TelegramIcon /> },
     { href: whatsappHref, label: t(locale, "quickContactWhatsapp"), bg: "bg-[#25D366]", icon: <WhatsAppIcon /> },
+    { href: telHref, label: t(locale, "quickContactCall"), bg: "bg-ink", icon: <CallIcon /> },
   ];
 
   return (
