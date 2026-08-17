@@ -1,5 +1,6 @@
 import type { Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
+import { formatHours } from "@/lib/duration";
 import type { Excursion } from "@/lib/data/excursions";
 import { ListingCard } from "@/components/ListingCard";
 
@@ -11,7 +12,7 @@ export function ExcursionCard({ excursion, locale }: { excursion: Excursion; loc
       imageAlt={excursion.title[locale]}
       eyebrow={excursion.city}
       title={excursion.title[locale]}
-      duration={`${excursion.durationHours} ${t(locale, "hours")}`}
+      duration={formatHours(excursion.durationHours, locale)}
       fromLabel={t(locale, "fromPrice")}
       price={excursion.priceUsd}
     />

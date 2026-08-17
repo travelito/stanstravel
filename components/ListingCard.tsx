@@ -30,15 +30,13 @@ export function ListingCard({
           alt={imageAlt}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
         />
-        <span className="pointer-events-none absolute bottom-2 left-2 z-20 rounded-full bg-ink/70 px-2.5 py-1 font-mono text-[11px] text-plaster backdrop-blur-sm">
-          {duration}
-        </span>
       </div>
       <Link href={href} className="flex flex-1 flex-col p-4">
         <p className="font-mono text-[11px] uppercase tracking-wide text-turquoise">{eyebrow}</p>
-        <h3 className="mt-1 font-display text-base leading-snug text-ink line-clamp-2 group-hover:text-indigo">
+        <h3 className="mt-1.5 font-display text-lg font-semibold leading-snug text-ink group-hover:text-indigo">
           {title}
         </h3>
+        <p className="mt-2 font-mono text-xs text-ink/50">{duration}</p>
         <div className="mt-auto flex items-baseline justify-between pt-3 font-mono text-sm">
           <span className="text-ink/50">{fromLabel}</span>
           <span className="text-base font-semibold text-indigo">${price}</span>
