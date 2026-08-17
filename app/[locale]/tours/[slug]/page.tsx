@@ -4,11 +4,11 @@ import { notFound } from "next/navigation";
 import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
 import { formatDuration } from "@/lib/duration";
-import { whatsappNumber } from "@/lib/contact";
 import { getAllTours, getTourBySlug } from "@/lib/data/tours";
 import { ListingImage } from "@/components/ListingImage";
 import { PhotoGallery } from "@/components/PhotoGallery";
 import { ShareButton } from "@/components/ShareButton";
+import { BookingForm } from "@/components/BookingForm";
 
 export async function generateStaticParams() {
   const tours = await getAllTours();
@@ -55,10 +55,6 @@ export default async function TourDetailPage({
     description: tour!.summary[locale],
     touristType: "Sightseeing",
   };
-
-  const whatsappHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-    `${t(locale, "inquiryPrefix")} «${tour!.title[locale]}»`
-  )}`;
 
   return (
     <article className="mx-auto max-w-5xl px-6 py-10 sm:py-12">
@@ -120,20 +116,13 @@ export default async function TourDetailPage({
         </div>
 
         <aside className="order-first lg:order-last">
-          <div className="lg:sticky lg:top-24 rounded-xl border border-ink/10 bg-white p-6 shadow-sm">
-            <p className="font-mono text-xs uppercase tracking-wide text-ink/50">{t(locale, "fromPrice")}</p>
-            <p className="font-display text-3xl font-semibold text-indigo mt-1">
-              ${tour!.priceUsd}{" "}
-              <span className="font-body text-sm font-normal text-ink/50">{t(locale, "perPerson")}</span>
-            </p>
-            <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-5 block text-center bg-indigo text-plaster px-5 py-3 rounded-md hover:bg-turquoise transition-colors font-body"
-            >
-              {t(locale, "contactsWhatsapp")}
-            </a>
+          <div className="lg:sticky lg:top-24">
+            <BookingForm
+              title={tour!.title[locale]}
+              kindLabel={t(locale, "bookingLabelTour")}
+              priceUsd={tour!.priceUsd}
+              locale={locale}
+            />
           </div>
         </aside>
       </div>

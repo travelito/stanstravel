@@ -3,11 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
-import { whatsappNumber } from "@/lib/contact";
 import { getAllExcursions, getExcursionBySlug } from "@/lib/data/excursions";
 import { ListingImage } from "@/components/ListingImage";
 import { PhotoGallery } from "@/components/PhotoGallery";
 import { ShareButton } from "@/components/ShareButton";
+import { BookingForm } from "@/components/BookingForm";
 
 export async function generateStaticParams() {
   const excursions = await getAllExcursions();
@@ -46,10 +46,6 @@ export default async function ExcursionDetailPage({
   const locale = params.locale as Locale;
   const excursion = await getExcursionBySlug(params.slug);
   if (!excursion) notFound();
-
-  const whatsappHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-    `${t(locale, "inquiryPrefix")} «${excursion!.title[locale]}»`
-  )}`;
 
   return (
     <article className="mx-auto max-w-5xl px-6 py-10 sm:py-12">
@@ -99,19 +95,13 @@ export default async function ExcursionDetailPage({
         </div>
 
         <aside className="order-first lg:order-last">
-          <div className="lg:sticky lg:top-24 rounded-xl border border-ink/10 bg-white p-6 shadow-sm">
-            <p className="font-mono text-xs uppercase tracking-wide text-ink/50">{t(locale, "fromPrice")}</p>
-            <p className="font-display text-3xl font-semibold text-indigo mt-1">
-              ${excursion!.priceUsd}
-            </p>
-            <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-5 block text-center bg-indigo text-plaster px-5 py-3 rounded-md hover:bg-turquoise transition-colors font-body"
-            >
-              {t(locale, "contactsWhatsapp")}
-            </a>
+          <div className="lg:sticky lg:top-24">
+            <BookingForm
+              title={excursion!.title[locale]}
+              kindLabel={t(locale, "bookingLabelExcursion")}
+              priceUsd={excursion!.priceUsd}
+              locale={locale}
+            />
           </div>
         </aside>
       </div>
