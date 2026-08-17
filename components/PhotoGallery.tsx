@@ -95,7 +95,13 @@ export function PhotoGallery({ photos, alt, locale }: { photos: Photo[]; alt: st
                 i === selected ? "border-turquoise" : "border-transparent"
               }`}
             >
-              <Image src={photo.thumb} alt="" fill className="object-cover" sizes="96px" />
+              <Image
+                src={photo.medium}
+                alt=""
+                fill
+                className="object-cover"
+                sizes="(max-width: 640px) 80px, 25vw"
+              />
             </button>
           ))}
         </div>
