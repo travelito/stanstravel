@@ -8,7 +8,7 @@ export function TourCard({ tour, locale }: { tour: Tour; locale: Locale }) {
   return (
     <ListingCard
       href={`/${locale}/tours/${tour.slug}`}
-      image={tour.photos[0]?.medium ?? null}
+      photos={tour.photos}
       imageAlt={tour.title[locale]}
       eyebrow={tour.city}
       title={tour.title[locale]}

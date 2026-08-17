@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { ListingImage } from "@/components/ListingImage";
+import type { Photo } from "@/lib/storage";
+import { CardPhotoSwiper } from "@/components/CardPhotoSwiper";
 
 export function ListingCard({
   href,
-  image,
+  photos,
   imageAlt,
   eyebrow,
   title,
@@ -12,7 +13,7 @@ export function ListingCard({
   price,
 }: {
   href: string;
-  image?: string | null;
+  photos: Photo[];
   imageAlt: string;
   eyebrow: string;
   title: string;
@@ -21,21 +22,19 @@ export function ListingCard({
   price: number;
 }) {
   return (
-    <Link
-      href={href}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-turquoise/60 hover:shadow-md"
-    >
+    <div className="group flex flex-col overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-turquoise/60 hover:shadow-md">
       <div className="relative h-44 w-full sm:h-48">
-        <ListingImage
-          src={image}
+        <CardPhotoSwiper
+          href={href}
+          photos={photos}
           alt={imageAlt}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
         />
-        <span className="absolute bottom-2 left-2 rounded-full bg-ink/70 px-2.5 py-1 font-mono text-[11px] text-plaster backdrop-blur-sm">
+        <span className="pointer-events-none absolute bottom-2 left-2 z-20 rounded-full bg-ink/70 px-2.5 py-1 font-mono text-[11px] text-plaster backdrop-blur-sm">
           {duration}
         </span>
       </div>
-      <div className="flex flex-1 flex-col p-4">
+      <Link href={href} className="flex flex-1 flex-col p-4">
         <p className="font-mono text-[11px] uppercase tracking-wide text-turquoise">{eyebrow}</p>
         <h3 className="mt-1 font-display text-base leading-snug text-ink line-clamp-2 group-hover:text-indigo">
           {title}
@@ -44,7 +43,7 @@ export function ListingCard({
           <span className="text-ink/50">{fromLabel}</span>
           <span className="text-base font-semibold text-indigo">${price}</span>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 }
