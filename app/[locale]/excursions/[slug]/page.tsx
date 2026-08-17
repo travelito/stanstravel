@@ -63,7 +63,7 @@ export default async function ExcursionDetailPage({
       <h1 className="font-display text-3xl mt-2">{excursion!.title[locale]}</h1>
       <div className="mt-6">
         {excursion!.photos.length > 0 ? (
-          <PhotoGallery photos={excursion!.photos} alt={excursion!.title[locale]} />
+          <PhotoGallery photos={excursion!.photos} alt={excursion!.title[locale]} locale={locale} />
         ) : (
           <div className="relative h-72 w-full rounded-lg overflow-hidden">
             <ListingImage src={null} alt={excursion!.title[locale]} sizes="(max-width: 768px) 100vw, 768px" />

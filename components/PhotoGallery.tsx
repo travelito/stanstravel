@@ -3,13 +3,15 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import type { Photo } from "@/lib/storage";
+import type { Locale } from "@/lib/locales";
+import { t } from "@/lib/dictionary";
 
 const SWIPE_THRESHOLD = 50;
 
-export function PhotoGallery({ photos, alt }: { photos: Photo[]; alt: string }) {
+export function PhotoGallery({ photos, alt, locale }: { photos: Photo[]; alt: string; locale: Locale }) {
   const [selected, setSelected] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  const touchStartX = useRef<number | null>(null);
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
   const active = photos[selected] ?? photos[0];
 
   const goTo = (index: number) => {
@@ -34,14 +36,20 @@ export function PhotoGallery({ photos, alt }: { photos: Photo[]; alt: string }) 
   }, [lightboxOpen, selected]);
 
   const onTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
+    touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
   };
   const onTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null) return;
-    const delta = e.changedTouches[0].clientX - touchStartX.current;
-    touchStartX.current = null;
-    if (delta > SWIPE_THRESHOLD) goTo(selected - 1);
-    else if (delta < -SWIPE_THRESHOLD) goTo(selected + 1);
+    if (touchStart.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStart.current.x;
+    const dy = e.changedTouches[0].clientY - touchStart.current.y;
+    touchStart.current = null;
+
+    if (Math.abs(dy) > Math.abs(dx)) {
+      if (dy > SWIPE_THRESHOLD) setLightboxOpen(false);
+      return;
+    }
+    if (dx > SWIPE_THRESHOLD) goTo(selected - 1);
+    else if (dx < -SWIPE_THRESHOLD) goTo(selected + 1);
   };
 
   return (
@@ -117,6 +125,12 @@ export function PhotoGallery({ photos, alt }: { photos: Photo[]; alt: string }) 
           <div className="relative w-full h-full max-w-5xl max-h-[85vh] mx-4">
             <Image src={active.full} alt={alt} fill className="object-contain" sizes="100vw" />
           </div>
+
+          {photos.length > 1 && (
+            <div className="absolute bottom-4 inset-x-0 text-center font-mono text-sm text-plaster">
+              {selected + 1} {t(locale, "photoOf")} {photos.length}
+            </div>
+          )}
         </div>
       )}
     </div>
