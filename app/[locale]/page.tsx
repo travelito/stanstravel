@@ -3,7 +3,9 @@ import type { Metadata } from "next";
 import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
 import { getAllTours } from "@/lib/data/tours";
+import { getAllExcursions } from "@/lib/data/excursions";
 import { TourCard } from "@/components/TourCard";
+import { CityExcursionRow } from "@/components/CityExcursionRow";
 import { RouteMap } from "@/components/RouteMap";
 import { CityMap } from "@/components/CityMap";
 import { notFound } from "next/navigation";
@@ -40,6 +42,22 @@ export default async function HomePage({
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const tours = await getAllTours();
+  const excursions = await getAllExcursions();
+
+  const excursionsByCity = Object.entries(
+    excursions.reduce<Record<string, typeof excursions>>((acc, excursion) => {
+      (acc[excursion.city] ??= []).push(excursion);
+      return acc;
+    }, {})
+  )
+    .map(
+      ([city, items]) =>
+        [
+          city,
+          [...items].sort((a, b) => a.title[locale].localeCompare(b.title[locale], locale)),
+        ] as const
+    )
+    .sort((a, b) => b[1].length - a[1].length);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -75,6 +93,10 @@ export default async function HomePage({
           ))}
         </div>
       </section>
+
+      {excursionsByCity.map(([city, items]) => (
+        <CityExcursionRow key={city} city={city} excursions={items.slice(0, 4)} locale={locale} />
+      ))}
 
       <section className="py-12 flex flex-col items-center text-center">
         <h2 className="font-display text-2xl mb-6">

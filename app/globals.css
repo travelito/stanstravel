@@ -22,6 +22,16 @@ body {
   stroke-dasharray: 6 6;
 }
 
+/* Hides the scrollbar on horizontally-swipeable rows (city excursion
+   carousels) without disabling scroll itself. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
