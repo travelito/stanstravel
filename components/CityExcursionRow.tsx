@@ -25,9 +25,9 @@ export function CityExcursionRow({
           {t(locale, "seeAllExcursionsIn")} {cityLabelIn(city, locale)} →
         </Link>
       </div>
-      <div className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto pb-1 sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0 md:grid-cols-4">
+      <div className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto pb-1 sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0 lg:grid-cols-3">
         {excursions.map((excursion) => (
-          <div key={excursion.slug} className="w-64 flex-shrink-0 snap-start sm:w-auto">
+          <div key={excursion.slug} className="w-72 flex-shrink-0 snap-start sm:w-auto">
             <ExcursionCard excursion={excursion} locale={locale} />
           </div>
         ))}

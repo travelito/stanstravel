@@ -23,15 +23,15 @@ export function ListingCard({
 }) {
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-turquoise/60 hover:shadow-md">
-      <div className="relative h-44 w-full sm:h-48">
+      <div className="relative h-52 w-full sm:h-56">
         <CardPhotoSwiper
           href={href}
           photos={photos}
           alt={imageAlt}
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
       </div>
-      <Link href={href} className="flex flex-1 flex-col p-4">
+      <Link href={href} className="flex flex-1 flex-col p-5">
         <p className="font-mono text-[11px] uppercase tracking-wide text-turquoise">{eyebrow}</p>
         <h3 className="mt-1.5 font-display text-lg font-semibold leading-snug text-ink group-hover:text-indigo">
           {title}

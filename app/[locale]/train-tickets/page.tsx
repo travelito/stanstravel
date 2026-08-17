@@ -28,7 +28,7 @@ export default async function TrainTicketsPage({ params }: { params: { locale: s
   const tickets = await getAllTrainTickets();
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-16">
+    <div className="mx-auto max-w-7xl px-6 py-16">
       <nav aria-label="breadcrumb" className="text-sm text-ink/50 mb-6 font-mono">
         <Link href={`/${locale}`} className="hover:text-turquoise">
           {t(locale, "navHome")}
@@ -36,7 +36,7 @@ export default async function TrainTicketsPage({ params }: { params: { locale: s
         / {t(locale, "trainTicketsTitle")}
       </nav>
       <h1 className="font-display text-3xl mb-8">{t(locale, "trainTicketsTitle")}</h1>
-      <div className="grid sm:grid-cols-2 gap-6">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {tickets.map((tt) => (
           <Link
             key={tt.slug}

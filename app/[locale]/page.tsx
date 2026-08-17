@@ -6,7 +6,6 @@ import { getAllTours } from "@/lib/data/tours";
 import { getAllExcursions, groupExcursionsByCity } from "@/lib/data/excursions";
 import { TourCard } from "@/components/TourCard";
 import { CityExcursionRow } from "@/components/CityExcursionRow";
-import { RouteMap } from "@/components/RouteMap";
 import { CityMap } from "@/components/CityMap";
 import { notFound } from "next/navigation";
 
@@ -54,19 +53,17 @@ export default async function HomePage({
   };
 
   return (
-    <div className="mx-auto max-w-5xl px-6">
+    <div className="mx-auto max-w-7xl px-6">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <section className="py-16 flex flex-col items-center text-center gap-6">
-        <h1 className="font-display text-4xl sm:text-5xl max-w-2xl">{t(locale, "heroTitle")}</h1>
-        <p className="text-ink/70 max-w-xl">{t(locale, "heroSubtitle")}</p>
-        <RouteMap />
+      <section className="pt-10 pb-8 flex flex-col items-center text-center gap-4">
+        <h1 className="font-display text-3xl sm:text-4xl max-w-2xl">{t(locale, "heroTitle")}</h1>
         <Link
           href={`/${locale}/tours`}
-          className="mt-2 inline-block bg-indigo text-plaster px-6 py-3 rounded-md font-body hover:bg-turquoise transition-colors"
+          className="inline-block bg-indigo text-plaster px-6 py-3 rounded-md font-body hover:bg-turquoise transition-colors"
         >
           {t(locale, "heroCta")}
         </Link>
@@ -82,7 +79,7 @@ export default async function HomePage({
       </section>
 
       {excursionsByCity.map(([city, items]) => (
-        <CityExcursionRow key={city} city={city} excursions={items.slice(0, 4)} locale={locale} />
+        <CityExcursionRow key={city} city={city} excursions={items.slice(0, 3)} locale={locale} />
       ))}
 
       <section className="py-12 flex flex-col items-center text-center">
