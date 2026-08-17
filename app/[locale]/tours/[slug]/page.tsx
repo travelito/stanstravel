@@ -7,6 +7,7 @@ import { formatDuration } from "@/lib/duration";
 import { getAllTours, getTourBySlug } from "@/lib/data/tours";
 import { ListingImage } from "@/components/ListingImage";
 import { PhotoGallery } from "@/components/PhotoGallery";
+import { ShareButton } from "@/components/ShareButton";
 
 export async function generateStaticParams() {
   const tours = await getAllTours();
@@ -72,8 +73,13 @@ export default async function TourDetailPage({
         / {tour!.title[locale]}
       </nav>
 
-      <p className="font-mono text-xs text-turquoise uppercase tracking-wide">{tour!.city}</p>
-      <h1 className="font-display text-3xl sm:text-4xl mt-2">{tour!.title[locale]}</h1>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="font-mono text-xs text-turquoise uppercase tracking-wide">{tour!.city}</p>
+          <h1 className="font-display text-3xl sm:text-4xl mt-2">{tour!.title[locale]}</h1>
+        </div>
+        <ShareButton label={t(locale, "share")} locale={locale} />
+      </div>
 
       <div className="mt-6">
         {tour!.photos.length > 0 ? (

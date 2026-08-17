@@ -28,7 +28,7 @@ export function Header({ locale }: { locale: Locale }) {
           ))}
         </nav>
         <div className="flex items-center gap-3">
-          <ShareButton label={t(locale, "share")} />
+          <ShareButton label={t(locale, "share")} locale={locale} />
           <LanguageSwitcher currentLocale={locale} />
           <MobileNav links={navLinks} />
         </div>

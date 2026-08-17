@@ -6,6 +6,7 @@ import { t } from "@/lib/dictionary";
 import { getAllExcursions, getExcursionBySlug } from "@/lib/data/excursions";
 import { ListingImage } from "@/components/ListingImage";
 import { PhotoGallery } from "@/components/PhotoGallery";
+import { ShareButton } from "@/components/ShareButton";
 
 export async function generateStaticParams() {
   const excursions = await getAllExcursions();
@@ -57,10 +58,15 @@ export default async function ExcursionDetailPage({
         </Link>{" "}
         / {excursion!.title[locale]}
       </nav>
-      <p className="font-mono text-xs text-turquoise uppercase tracking-wide">
-        {excursion!.city}
-      </p>
-      <h1 className="font-display text-3xl mt-2">{excursion!.title[locale]}</h1>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="font-mono text-xs text-turquoise uppercase tracking-wide">
+            {excursion!.city}
+          </p>
+          <h1 className="font-display text-3xl mt-2">{excursion!.title[locale]}</h1>
+        </div>
+        <ShareButton label={t(locale, "share")} locale={locale} />
+      </div>
       <div className="mt-6">
         {excursion!.photos.length > 0 ? (
           <PhotoGallery photos={excursion!.photos} alt={excursion!.title[locale]} locale={locale} />
