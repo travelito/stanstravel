@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { Photo } from "@/lib/storage";
 import type { Locale } from "@/lib/locales";
@@ -120,26 +121,61 @@ export function PhotoGallery({ photos, alt, locale }: { photos: Photo[]; alt: st
       </div>
 
       {/* Desktop — main photo + side thumbnail column */}
-      <button
-        type="button"
-        onClick={() => setLightboxOpen(true)}
-        aria-label="Открыть фото на весь экран"
-        className="relative hidden h-full w-full overflow-hidden rounded-xl sm:block"
-      >
-        {neighbors.map((i) => (
-          <Image
-            key={i}
-            src={photos[i].full}
-            alt={i === selected ? alt : ""}
-            fill
-            loading="eager"
-            className={`object-cover transition-opacity duration-150 ${
-              i === selected ? "opacity-100" : "opacity-0"
-            }`}
-            sizes={HERO_SIZES}
-          />
-        ))}
-      </button>
+      <div className="relative hidden h-full w-full overflow-hidden rounded-xl sm:block">
+        <button
+          type="button"
+          onClick={() => setLightboxOpen(true)}
+          aria-label="Открыть фото на весь экран"
+          className="absolute inset-0"
+        >
+          {neighbors.map((i) => (
+            <Image
+              key={i}
+              src={photos[i].full}
+              alt={i === selected ? alt : ""}
+              fill
+              loading="eager"
+              className={`object-cover transition-opacity duration-150 ${
+                i === selected ? "opacity-100" : "opacity-0"
+              }`}
+              sizes={HERO_SIZES}
+            />
+          ))}
+        </button>
+
+        {photos.length > 1 && selected > 0 && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              goTo(selected - 1);
+            }}
+            aria-label="Предыдущее фото"
+            className="absolute left-3 top-1/2 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-ink/60 text-plaster backdrop-blur-sm transition-colors hover:bg-ink"
+          >
+            <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+          </button>
+        )}
+        {photos.length > 1 && selected < photos.length - 1 && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              goTo(selected + 1);
+            }}
+            aria-label="Следующее фото"
+            className="absolute right-3 top-1/2 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-ink/60 text-plaster backdrop-blur-sm transition-colors hover:bg-ink"
+          >
+            <ChevronRight className="h-5 w-5" aria-hidden="true" />
+          </button>
+        )}
+
+        {photos.length > 1 && (
+          <span className="pointer-events-none absolute bottom-3 right-3 z-10 rounded-full bg-ink/70 px-2.5 py-1 font-mono text-xs text-plaster">
+            {selected + 1} / {photos.length}
+          </span>
+        )}
+      </div>
       {photos.length > 1 && (
         <div className="hidden gap-2 pb-1 sm:flex sm:h-full sm:flex-col sm:overflow-x-visible sm:overflow-y-auto sm:pb-0">
           {photos.map((photo, i) => (

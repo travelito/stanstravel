@@ -83,7 +83,21 @@ export default async function ExcursionDetailPage({
       </nav>
 
       <div className="flex flex-col">
-        <div className="order-2 mt-6 sm:order-1 sm:mt-0">
+        <div>
+          {excursion!.photos.length > 0 ? (
+            <PhotoGallery photos={excursion!.photos} alt={excursion!.title[locale]} locale={locale} />
+          ) : (
+            <div className="relative h-[70vh] w-full rounded-xl overflow-hidden sm:h-[420px]">
+              <ListingImage
+                src={null}
+                alt={excursion!.title[locale]}
+                sizes="(max-width: 640px) 100vw, 66vw"
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="mt-6">
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="font-mono text-sm font-semibold uppercase tracking-wide text-turquoise">
@@ -98,20 +112,6 @@ export default async function ExcursionDetailPage({
           <div className="mt-3">
             <QuickInfoRow items={quickInfoItems} />
           </div>
-        </div>
-
-        <div className="order-1 sm:order-2 sm:mt-6">
-          {excursion!.photos.length > 0 ? (
-            <PhotoGallery photos={excursion!.photos} alt={excursion!.title[locale]} locale={locale} />
-          ) : (
-            <div className="relative h-[70vh] w-full rounded-xl overflow-hidden sm:h-[420px]">
-              <ListingImage
-                src={null}
-                alt={excursion!.title[locale]}
-                sizes="(max-width: 640px) 100vw, 66vw"
-              />
-            </div>
-          )}
         </div>
       </div>
 
