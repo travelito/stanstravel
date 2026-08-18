@@ -79,7 +79,7 @@ export function PhotoGallery({ photos, alt, locale }: { photos: Photo[]; alt: st
         onTouchStart={onMainTouchStart}
         onTouchEnd={onMainTouchEnd}
         aria-label="Открыть фото на весь экран"
-        className="relative h-72 sm:h-full w-full rounded-xl overflow-hidden block cursor-zoom-in"
+        className="relative h-[75vh] w-[calc(100%+3rem)] -mx-6 rounded-none sm:h-full sm:w-full sm:mx-0 sm:rounded-xl overflow-hidden block cursor-zoom-in"
       >
         {neighbors.map((i) => (
           <Image
@@ -94,9 +94,14 @@ export function PhotoGallery({ photos, alt, locale }: { photos: Photo[]; alt: st
             sizes={HERO_SIZES}
           />
         ))}
+        {photos.length > 1 && (
+          <span className="absolute bottom-3 right-3 sm:hidden rounded-full bg-ink/70 px-2.5 py-1 font-mono text-xs text-plaster">
+            {selected + 1} / {photos.length}
+          </span>
+        )}
       </button>
       {photos.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-1 sm:h-full sm:flex-col sm:overflow-x-visible sm:overflow-y-auto sm:pb-0">
+        <div className="hidden gap-2 pb-1 sm:flex sm:h-full sm:flex-col sm:overflow-x-visible sm:overflow-y-auto sm:pb-0">
           {photos.map((photo, i) => (
             <button
               key={photo.thumb + i}

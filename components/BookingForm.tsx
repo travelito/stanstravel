@@ -85,21 +85,21 @@ export function BookingForm({
 
         <div className={fieldLabelClass}>
           <span className={fieldNameClass}>{t(locale, "bookingTravelers")}</span>
-          <div className="flex items-center gap-3">
+          <div className="grid grid-cols-3 items-center rounded-md border border-ink/15 px-2 py-1">
             <button
               type="button"
               onClick={() => setTravelers((n) => Math.max(1, n - 1))}
               aria-label="−"
-              className="flex h-9 w-9 items-center justify-center rounded-md border border-ink/15 text-ink/70 hover:border-turquoise hover:text-turquoise transition-colors"
+              className="flex h-8 w-8 items-center justify-center justify-self-start rounded-md text-ink/70 hover:text-turquoise transition-colors"
             >
               −
             </button>
-            <span className="w-8 text-center font-mono">{travelers}</span>
+            <span className="text-center font-mono text-sm">{travelers}</span>
             <button
               type="button"
               onClick={() => setTravelers((n) => Math.min(MAX_TRAVELERS, n + 1))}
               aria-label="+"
-              className="flex h-9 w-9 items-center justify-center rounded-md border border-ink/15 text-ink/70 hover:border-turquoise hover:text-turquoise transition-colors"
+              className="flex h-8 w-8 items-center justify-center justify-self-end rounded-md text-ink/70 hover:text-turquoise transition-colors"
             >
               +
             </button>

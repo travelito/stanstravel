@@ -74,29 +74,31 @@ export default async function TourDetailPage({
         / {tour!.title[locale]}
       </nav>
 
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="font-mono text-sm font-semibold uppercase tracking-wide text-turquoise">
-            {tour!.city}
-          </p>
-          <h1 className="font-display text-3xl sm:text-4xl font-semibold leading-tight text-ink mt-1">
-            {tour!.title[locale]}
-          </h1>
-          <p className="mt-3 font-mono text-sm text-ink/60">
-            {t(locale, "duration")}: {formatDuration(tour!.duration, locale)}
-          </p>
-        </div>
-        <ShareButton label={t(locale, "share")} locale={locale} />
-      </div>
-
-      <div className="mt-6">
-        {tour!.photos.length > 0 ? (
-          <PhotoGallery photos={tour!.photos} alt={tour!.title[locale]} locale={locale} />
-        ) : (
-          <div className="relative h-72 sm:h-[420px] w-full rounded-xl overflow-hidden">
-            <ListingImage src={null} alt={tour!.title[locale]} sizes="(max-width: 640px) 100vw, 66vw" />
+      <div className="flex flex-col">
+        <div className="order-2 mt-6 flex items-start justify-between gap-4 sm:order-1 sm:mt-0">
+          <div>
+            <p className="font-mono text-sm font-semibold uppercase tracking-wide text-turquoise">
+              {tour!.city}
+            </p>
+            <h1 className="font-display text-3xl sm:text-4xl font-semibold leading-tight text-ink mt-1">
+              {tour!.title[locale]}
+            </h1>
+            <p className="mt-3 font-mono text-sm text-ink/60">
+              {t(locale, "duration")}: {formatDuration(tour!.duration, locale)}
+            </p>
           </div>
-        )}
+          <ShareButton label={t(locale, "share")} locale={locale} />
+        </div>
+
+        <div className="order-1 sm:order-2 sm:mt-6">
+          {tour!.photos.length > 0 ? (
+            <PhotoGallery photos={tour!.photos} alt={tour!.title[locale]} locale={locale} />
+          ) : (
+            <div className="relative h-[75vh] w-[calc(100%+3rem)] -mx-6 sm:h-[420px] sm:w-full sm:mx-0 rounded-none sm:rounded-xl overflow-hidden">
+              <ListingImage src={null} alt={tour!.title[locale]} sizes="(max-width: 640px) 100vw, 66vw" />
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="mt-10 grid gap-10 lg:grid-cols-3">
@@ -115,7 +117,7 @@ export default async function TourDetailPage({
           </ul>
         </div>
 
-        <aside className="order-first lg:order-last">
+        <aside className="lg:order-last">
           <div className="lg:sticky lg:top-24">
             <BookingForm
               title={tour!.title[locale]}
