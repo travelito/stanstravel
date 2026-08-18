@@ -19,7 +19,7 @@ function formatDateForMessage(iso: string, locale: Locale): string {
 }
 
 const inputClass =
-  "w-full rounded-md border border-ink/15 px-3 py-2 text-sm text-ink focus:outline-none focus:border-turquoise";
+  "h-11 w-full rounded-md border border-ink/15 px-3 text-sm text-ink focus:outline-none focus:border-turquoise";
 const fieldLabelClass = "flex flex-col gap-1 text-sm";
 const fieldNameClass = "font-medium text-ink/80";
 
@@ -65,27 +65,47 @@ export function BookingForm({
       <p className="font-display text-3xl font-semibold text-indigo mt-1">
         ${priceUsd} <span className="font-body text-sm font-normal text-ink/50">{t(locale, "perPerson")}</span>
       </p>
+      <p className="mt-1.5 text-xs text-ink/50">{t(locale, "bookingPaymentNote")}</p>
 
       <div className="mt-5 flex flex-col gap-4">
         <label className={fieldLabelClass}>
           <span className={fieldNameClass}>{t(locale, "bookingDate")}</span>
-          <input
-            type="date"
-            value={date}
-            min={todayIso()}
-            onChange={(e) => setDate(e.target.value)}
-            className={inputClass}
-          />
+          <div className="relative">
+            <input
+              type="date"
+              value={date}
+              min={todayIso()}
+              onChange={(e) => setDate(e.target.value)}
+              className={`${inputClass} ${date ? "" : "text-transparent"}`}
+            />
+            {!date && (
+              <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-ink/40">
+                {t(locale, "bookingDatePlaceholder")}
+              </span>
+            )}
+          </div>
         </label>
 
         <label className={fieldLabelClass}>
           <span className={fieldNameClass}>{t(locale, "bookingStartTime")}</span>
-          <input type="time" value={time} onChange={(e) => setTime(e.target.value)} className={inputClass} />
+          <div className="relative">
+            <input
+              type="time"
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+              className={`${inputClass} ${time ? "" : "text-transparent"}`}
+            />
+            {!time && (
+              <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-ink/40">
+                {t(locale, "bookingTimePlaceholder")}
+              </span>
+            )}
+          </div>
         </label>
 
         <div className={fieldLabelClass}>
           <span className={fieldNameClass}>{t(locale, "bookingTravelers")}</span>
-          <div className="grid grid-cols-3 items-center rounded-md border border-ink/15 px-2 py-1">
+          <div className="grid h-11 grid-cols-3 items-center rounded-md border border-ink/15 px-2">
             <button
               type="button"
               onClick={() => setTravelers((n) => Math.max(1, n - 1))}
