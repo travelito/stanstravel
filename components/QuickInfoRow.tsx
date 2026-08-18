@@ -9,10 +9,13 @@ export function QuickInfoRow({ items }: { items: QuickInfoItem[] }) {
   if (items.length === 0) return null;
 
   return (
-    <div className="flex flex-wrap gap-x-5 gap-y-2 font-mono text-sm text-ink/70">
+    <div className="flex flex-wrap gap-2">
       {items.map((item, i) => (
-        <span key={i} className="inline-flex items-center gap-1.5">
-          <item.icon className="h-4 w-4 text-turquoise" aria-hidden="true" />
+        <span
+          key={i}
+          className="inline-flex items-center gap-1.5 rounded-full bg-indigo/10 px-3 py-1.5 font-mono text-sm font-medium text-indigo"
+        >
+          <item.icon className="h-4 w-4" aria-hidden="true" />
           {item.label}
         </span>
       ))}
