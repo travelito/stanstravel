@@ -9,6 +9,7 @@ import { ListingImage } from "@/components/ListingImage";
 import { PhotoGallery } from "@/components/PhotoGallery";
 import { ShareButton } from "@/components/ShareButton";
 import { BookingForm } from "@/components/BookingForm";
+import type { PricingConfig } from "@/lib/pricing";
 
 export async function generateStaticParams() {
   const tours = await getAllTours();
@@ -47,6 +48,8 @@ export default async function TourDetailPage({
   const locale = params.locale as Locale;
   const tour = await getTourBySlug(params.slug);
   if (!tour) notFound(); // real 404 — no fallback to homepage content
+
+  const pricing: PricingConfig = { model: "per_person", pricePerPerson: tour!.priceUsd, tiers: null };
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -122,7 +125,7 @@ export default async function TourDetailPage({
             <BookingForm
               title={tour!.title[locale]}
               kindLabel={t(locale, "bookingLabelTour")}
-              priceUsd={tour!.priceUsd}
+              pricing={pricing}
               locale={locale}
             />
           </div>

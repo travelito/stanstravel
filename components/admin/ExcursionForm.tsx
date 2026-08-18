@@ -1,5 +1,6 @@
 import type { Excursion } from "@/lib/data/excursions";
 import { PhotoUploader } from "@/components/admin/PhotoUploader";
+import { PricingFields } from "@/components/admin/PricingFields";
 
 const inputClass = "border border-ink/20 rounded-md px-3 py-2 bg-white w-full";
 const labelClass = "flex flex-col gap-1 text-sm";
@@ -42,31 +43,18 @@ export function ExcursionForm({
             <input type="text" name="city" required defaultValue={excursion?.city} className={inputClass} />
           </label>
           <label className={labelClass}>
-            Цена, $
+            Длительность, часы
             <input
               type="number"
-              name="price_usd"
+              name="duration_hours"
               required
               min={0}
-              step="1"
-              defaultValue={excursion?.priceUsd}
+              step="0.5"
+              defaultValue={excursion?.durationHours}
               className={inputClass}
             />
           </label>
         </div>
-
-        <label className={labelClass}>
-          Длительность, часы
-          <input
-            type="number"
-            name="duration_hours"
-            required
-            min={0}
-            step="0.5"
-            defaultValue={excursion?.durationHours}
-            className={inputClass}
-          />
-        </label>
 
         <div className="grid grid-cols-2 gap-4">
           <label className={labelClass}>
@@ -101,6 +89,12 @@ export function ExcursionForm({
             />
           </label>
         </div>
+
+        <PricingFields
+          defaultModel={excursion?.pricingModel ?? "per_person"}
+          defaultPricePerPerson={excursion?.pricingModel === "group" ? 0 : (excursion?.priceUsd ?? 0)}
+          defaultTiers={excursion?.priceTiers ?? []}
+        />
 
         <div className="grid grid-cols-2 gap-4">
           <label className={labelClass}>

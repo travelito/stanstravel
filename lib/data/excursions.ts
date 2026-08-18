@@ -5,6 +5,7 @@
 import type { Locale } from "@/lib/locales";
 import { supabase } from "@/lib/supabase";
 import { resolvePhotos, type Photo } from "@/lib/storage";
+import type { PriceTier, PricingModel } from "@/lib/pricing";
 
 export type Excursion = {
   slug: string;
@@ -23,6 +24,8 @@ export type Excursion = {
   tourType: string | null;
   guideLanguage: string | null;
   pickupIncluded: boolean | null;
+  pricingModel: PricingModel;
+  priceTiers: PriceTier[] | null;
 };
 
 type ExcursionRow = {
@@ -42,6 +45,8 @@ type ExcursionRow = {
   tour_type: string | null;
   guide_language: string | null;
   pickup_included: boolean | null;
+  pricing_model: PricingModel;
+  price_tiers: PriceTier[] | null;
 };
 
 function rowToExcursion(row: ExcursionRow): Excursion {
@@ -62,6 +67,8 @@ function rowToExcursion(row: ExcursionRow): Excursion {
     tourType: row.tour_type,
     guideLanguage: row.guide_language,
     pickupIncluded: row.pickup_included,
+    pricingModel: row.pricing_model,
+    priceTiers: row.price_tiers,
   };
 }
 

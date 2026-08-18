@@ -12,6 +12,7 @@ import { PhotoGallery } from "@/components/PhotoGallery";
 import { ShareButton } from "@/components/ShareButton";
 import { BookingForm } from "@/components/BookingForm";
 import { QuickInfoRow, type QuickInfoItem } from "@/components/QuickInfoRow";
+import type { PricingConfig } from "@/lib/pricing";
 
 export async function generateStaticParams() {
   const excursions = await getAllExcursions();
@@ -68,6 +69,12 @@ export default async function ExcursionDetailPage({
     excursion!.guideLanguage ? { icon: Languages, label: excursion!.guideLanguage } : null,
     excursion!.pickupIncluded === true ? { icon: Car, label: t(locale, "quickInfoPickupIncluded") } : null,
   ].filter((item): item is QuickInfoItem => item !== null);
+
+  const pricing: PricingConfig = {
+    model: excursion!.pricingModel,
+    pricePerPerson: excursion!.priceUsd,
+    tiers: excursion!.priceTiers,
+  };
 
   return (
     <article className="mx-auto max-w-5xl px-6 py-10 sm:py-12">
@@ -177,7 +184,7 @@ export default async function ExcursionDetailPage({
             <BookingForm
               title={excursion!.title[locale]}
               kindLabel={t(locale, "bookingLabelExcursion")}
-              priceUsd={excursion!.priceUsd}
+              pricing={pricing}
               locale={locale}
             />
           </div>

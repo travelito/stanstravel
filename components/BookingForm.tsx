@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
 import { whatsappNumber, telegramUsername } from "@/lib/contact";
 import { WhatsAppIcon, TelegramIcon } from "@/components/BrandIcons";
-
-const MAX_TRAVELERS = 20;
+import { calculatePrice, formatPrice, maxTravelers, type PricingConfig } from "@/lib/pricing";
 
 function todayIso(): string {
   const d = new Date();
@@ -26,12 +25,12 @@ const fieldNameClass = "font-medium text-ink/80";
 export function BookingForm({
   title,
   kindLabel,
-  priceUsd,
+  pricing,
   locale,
 }: {
   title: string;
   kindLabel: string;
-  priceUsd: number;
+  pricing: PricingConfig;
   locale: Locale;
 }) {
   const [date, setDate] = useState("");
@@ -39,8 +38,9 @@ export function BookingForm({
   const [travelers, setTravelers] = useState(1);
   const [pickup, setPickup] = useState("");
 
-  const totalPrice = priceUsd * travelers;
-  const canSubmit = date.trim() !== "" && pickup.trim() !== "";
+  const maxCount = useMemo(() => maxTravelers(pricing), [pricing]);
+  const price = useMemo(() => calculatePrice(pricing, travelers), [pricing, travelers]);
+  const canSubmit = price.status === "ok" && date.trim() !== "" && pickup.trim() !== "";
 
   const message = [
     t(locale, "bookingGreeting"),
@@ -52,19 +52,40 @@ export function BookingForm({
     ...(time ? [`${t(locale, "bookingStartTime")}: ${time}`] : []),
     `${t(locale, "bookingTravelers")}: ${travelers}`,
     `${t(locale, "bookingPickupLocation")}: ${pickup}`,
+    ...(price.status === "ok" ? [`${t(locale, "bookingTotalPrice")}: $${formatPrice(price.total)}`] : []),
     "",
     t(locale, "bookingClosing"),
   ].join("\n");
 
+  const contactMessage = [
+    t(locale, "bookingGreeting"),
+    "",
+    t(locale, "priceContactIntro"),
+    "",
+    `${kindLabel}: ${title}`,
+    `${t(locale, "bookingTravelers")}: ${travelers}`,
+  ].join("\n");
+
   const whatsappHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
   const telegramHref = `https://t.me/${telegramUsername}?text=${encodeURIComponent(message)}`;
+  const contactWhatsappHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(contactMessage)}`;
+  const contactTelegramHref = `https://t.me/${telegramUsername}?text=${encodeURIComponent(contactMessage)}`;
 
   return (
     <div className="rounded-xl border border-ink/10 bg-white p-6 shadow-sm">
-      <p className="font-mono text-xs uppercase tracking-wide text-ink/50">{t(locale, "fromPrice")}</p>
-      <p className="font-display text-3xl font-semibold text-indigo mt-1">
-        ${priceUsd} <span className="font-body text-sm font-normal text-ink/50">{t(locale, "perPerson")}</span>
-      </p>
+      {price.status === "ok" ? (
+        <>
+          <p className="font-mono text-xs uppercase tracking-wide text-ink/50">
+            {t(locale, "bookingTotalPrice")}
+          </p>
+          <p className="font-display text-3xl font-semibold text-indigo mt-1">${formatPrice(price.total)}</p>
+          <p className="mt-1 font-mono text-sm text-ink/60">
+            ${formatPrice(price.perPerson)} {t(locale, "perPerson")}
+          </p>
+        </>
+      ) : (
+        <p className="font-body text-sm text-ink/70">{t(locale, "priceContactMessage")}</p>
+      )}
       <p className="mt-1.5 text-xs text-ink/50">{t(locale, "bookingPaymentNote")}</p>
 
       <div className="mt-5 flex flex-col gap-4">
@@ -117,9 +138,10 @@ export function BookingForm({
             <span className="text-center font-mono text-sm">{travelers}</span>
             <button
               type="button"
-              onClick={() => setTravelers((n) => Math.min(MAX_TRAVELERS, n + 1))}
+              onClick={() => setTravelers((n) => Math.min(maxCount, n + 1))}
+              disabled={travelers >= maxCount}
               aria-label="+"
-              className="flex h-8 w-8 items-center justify-center justify-self-end rounded-md text-ink/70 hover:text-turquoise transition-colors"
+              className="flex h-8 w-8 items-center justify-center justify-self-end rounded-md text-ink/70 hover:text-turquoise transition-colors disabled:opacity-30 disabled:hover:text-ink/70"
             >
               +
             </button>
@@ -138,15 +160,10 @@ export function BookingForm({
         </label>
       </div>
 
-      <div className="mt-5 flex items-baseline justify-between border-t border-ink/10 pt-4">
-        <span className="font-mono text-sm text-ink/60">{t(locale, "bookingTotalPrice")}</span>
-        <span className="font-display text-xl font-semibold text-indigo">${totalPrice}</span>
-      </div>
-
-      <div className="mt-5 flex flex-col gap-3">
-        {canSubmit ? (
+      {price.status === "unavailable" ? (
+        <div className="mt-5 flex flex-col gap-3">
           <a
-            href={whatsappHref}
+            href={contactWhatsappHref}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 rounded-md bg-[#25D366] px-5 py-3 font-body text-white hover:bg-[#1da851] transition-colors"
@@ -154,19 +171,8 @@ export function BookingForm({
             <WhatsAppIcon size={18} />
             WhatsApp
           </a>
-        ) : (
-          <button
-            type="button"
-            disabled
-            className="flex items-center justify-center gap-2 rounded-md bg-[#25D366]/50 px-5 py-3 font-body text-white cursor-not-allowed"
-          >
-            <WhatsAppIcon size={18} />
-            WhatsApp
-          </button>
-        )}
-        {canSubmit ? (
           <a
-            href={telegramHref}
+            href={contactTelegramHref}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 rounded-md bg-[#229ED9] px-5 py-3 font-body text-white hover:bg-[#1b87b9] transition-colors"
@@ -174,17 +180,51 @@ export function BookingForm({
             <TelegramIcon size={18} />
             Telegram
           </a>
-        ) : (
-          <button
-            type="button"
-            disabled
-            className="flex items-center justify-center gap-2 rounded-md bg-[#229ED9]/50 px-5 py-3 font-body text-white cursor-not-allowed"
-          >
-            <TelegramIcon size={18} />
-            Telegram
-          </button>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="mt-5 flex flex-col gap-3">
+          {canSubmit ? (
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 rounded-md bg-[#25D366] px-5 py-3 font-body text-white hover:bg-[#1da851] transition-colors"
+            >
+              <WhatsAppIcon size={18} />
+              WhatsApp
+            </a>
+          ) : (
+            <button
+              type="button"
+              disabled
+              className="flex items-center justify-center gap-2 rounded-md bg-[#25D366]/50 px-5 py-3 font-body text-white cursor-not-allowed"
+            >
+              <WhatsAppIcon size={18} />
+              WhatsApp
+            </button>
+          )}
+          {canSubmit ? (
+            <a
+              href={telegramHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 rounded-md bg-[#229ED9] px-5 py-3 font-body text-white hover:bg-[#1b87b9] transition-colors"
+            >
+              <TelegramIcon size={18} />
+              Telegram
+            </a>
+          ) : (
+            <button
+              type="button"
+              disabled
+              className="flex items-center justify-center gap-2 rounded-md bg-[#229ED9]/50 px-5 py-3 font-body text-white cursor-not-allowed"
+            >
+              <TelegramIcon size={18} />
+              Telegram
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }
