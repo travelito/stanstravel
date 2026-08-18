@@ -102,6 +102,129 @@ export function ExcursionForm({
           </label>
         </div>
 
+        <div className="grid grid-cols-2 gap-4">
+          <label className={labelClass}>
+            Highlights — что увидите (RU), один пункт на строку
+            <textarea
+              name="highlights_ru"
+              rows={4}
+              defaultValue={excursion?.highlights?.ru.join("\n")}
+              className={inputClass}
+            />
+          </label>
+          <label className={labelClass}>
+            Highlights (EN), один пункт на строку
+            <textarea
+              name="highlights_en"
+              rows={4}
+              defaultValue={excursion?.highlights?.en.join("\n")}
+              className={inputClass}
+            />
+          </label>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <label className={labelClass}>
+            Itinerary — маршрут по точкам (RU), один пункт на строку, без времени
+            <textarea
+              name="itinerary_ru"
+              rows={4}
+              defaultValue={excursion?.itinerary?.ru.join("\n")}
+              className={inputClass}
+            />
+          </label>
+          <label className={labelClass}>
+            Itinerary (EN), один пункт на строку
+            <textarea
+              name="itinerary_en"
+              rows={4}
+              defaultValue={excursion?.itinerary?.en.join("\n")}
+              className={inputClass}
+            />
+          </label>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <label className={labelClass}>
+            Included — включено (RU), один пункт на строку
+            <textarea
+              name="included_ru"
+              rows={4}
+              defaultValue={excursion?.included?.ru.join("\n")}
+              className={inputClass}
+            />
+          </label>
+          <label className={labelClass}>
+            Included (EN), один пункт на строку
+            <textarea
+              name="included_en"
+              rows={4}
+              defaultValue={excursion?.included?.en.join("\n")}
+              className={inputClass}
+            />
+          </label>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <label className={labelClass}>
+            Not included — не включено (RU), один пункт на строку
+            <textarea
+              name="not_included_ru"
+              rows={4}
+              defaultValue={excursion?.notIncluded?.ru.join("\n")}
+              className={inputClass}
+            />
+          </label>
+          <label className={labelClass}>
+            Not included (EN), один пункт на строку
+            <textarea
+              name="not_included_en"
+              rows={4}
+              defaultValue={excursion?.notIncluded?.en.join("\n")}
+              className={inputClass}
+            />
+          </label>
+        </div>
+
+        <div className="grid grid-cols-3 gap-4">
+          <label className={labelClass}>
+            Тип тура
+            <select name="tour_type" defaultValue={excursion?.tourType ?? ""} className={inputClass}>
+              <option value="">— не указано —</option>
+              <option value="private">Private</option>
+              <option value="group">Group</option>
+            </select>
+          </label>
+          <label className={labelClass}>
+            Язык гида
+            <input
+              type="text"
+              name="guide_language"
+              defaultValue={excursion?.guideLanguage ?? ""}
+              placeholder="например, English, Russian"
+              className={inputClass}
+            />
+          </label>
+          <label className={labelClass}>
+            Трансфер/пикап включён
+            <select
+              name="pickup_included"
+              defaultValue={
+                excursion?.pickupIncluded === true
+                  ? "true"
+                  : excursion?.pickupIncluded === false
+                    ? "false"
+                    : ""
+              }
+              className={inputClass}
+            >
+              <option value="">— не указано —</option>
+              <option value="true">Да</option>
+              <option value="false">Нет</option>
+            </select>
+          </label>
+        </div>
+
         {error && <p className="text-sm text-red-700">{error}</p>}
 
         <button

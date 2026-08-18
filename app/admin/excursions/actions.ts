@@ -4,6 +4,25 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/auth/supabase-server";
 import { revalidateExcursionPaths } from "@/lib/revalidate";
 
+function lines(value: FormDataEntryValue | null): string[] {
+  return String(value ?? "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
+function nullableText(value: FormDataEntryValue | null): string | null {
+  const s = String(value ?? "").trim();
+  return s === "" ? null : s;
+}
+
+function nullableBool(value: FormDataEntryValue | null): boolean | null {
+  const s = String(value ?? "");
+  if (s === "true") return true;
+  if (s === "false") return false;
+  return null;
+}
+
 function excursionPayload(formData: FormData) {
   return {
     city: String(formData.get("city") ?? ""),
@@ -11,6 +30,16 @@ function excursionPayload(formData: FormData) {
     price_usd: Number(formData.get("price_usd")),
     title: { ru: String(formData.get("title_ru") ?? ""), en: String(formData.get("title_en") ?? "") },
     summary: { ru: String(formData.get("summary_ru") ?? ""), en: String(formData.get("summary_en") ?? "") },
+    highlights: { ru: lines(formData.get("highlights_ru")), en: lines(formData.get("highlights_en")) },
+    itinerary: { ru: lines(formData.get("itinerary_ru")), en: lines(formData.get("itinerary_en")) },
+    included: { ru: lines(formData.get("included_ru")), en: lines(formData.get("included_en")) },
+    not_included: {
+      ru: lines(formData.get("not_included_ru")),
+      en: lines(formData.get("not_included_en")),
+    },
+    tour_type: nullableText(formData.get("tour_type")),
+    guide_language: nullableText(formData.get("guide_language")),
+    pickup_included: nullableBool(formData.get("pickup_included")),
   };
 }
 

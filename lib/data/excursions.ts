@@ -16,6 +16,13 @@ export type Excursion = {
   summary: Record<Locale, string>;
   image: string | null;
   photos: Photo[];
+  highlights: Record<Locale, string[]> | null;
+  itinerary: Record<Locale, string[]> | null;
+  included: Record<Locale, string[]> | null;
+  notIncluded: Record<Locale, string[]> | null;
+  tourType: string | null;
+  guideLanguage: string | null;
+  pickupIncluded: boolean | null;
 };
 
 type ExcursionRow = {
@@ -28,6 +35,13 @@ type ExcursionRow = {
   summary: Record<Locale, string>;
   image: string | null;
   photos: Photo[];
+  highlights: Record<Locale, string[]> | null;
+  itinerary: Record<Locale, string[]> | null;
+  included: Record<Locale, string[]> | null;
+  not_included: Record<Locale, string[]> | null;
+  tour_type: string | null;
+  guide_language: string | null;
+  pickup_included: boolean | null;
 };
 
 function rowToExcursion(row: ExcursionRow): Excursion {
@@ -41,6 +55,13 @@ function rowToExcursion(row: ExcursionRow): Excursion {
     summary: row.summary,
     image: row.image,
     photos: resolvePhotos(row.photos, row.image),
+    highlights: row.highlights,
+    itinerary: row.itinerary,
+    included: row.included,
+    notIncluded: row.not_included,
+    tourType: row.tour_type,
+    guideLanguage: row.guide_language,
+    pickupIncluded: row.pickup_included,
   };
 }
 
