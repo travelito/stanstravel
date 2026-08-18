@@ -94,7 +94,7 @@ export default async function TourDetailPage({
           {tour!.photos.length > 0 ? (
             <PhotoGallery photos={tour!.photos} alt={tour!.title[locale]} locale={locale} />
           ) : (
-            <div className="relative h-[75vh] w-[calc(100%+3rem)] -mx-6 sm:h-[420px] sm:w-full sm:mx-0 rounded-none sm:rounded-xl overflow-hidden">
+            <div className="relative h-[70vh] w-full rounded-xl overflow-hidden sm:h-[420px]">
               <ListingImage src={null} alt={tour!.title[locale]} sizes="(max-width: 640px) 100vw, 66vw" />
             </div>
           )}

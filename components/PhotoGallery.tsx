@@ -13,6 +13,8 @@ export function PhotoGallery({ photos, alt, locale }: { photos: Photo[]; alt: st
   const [selected, setSelected] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const touchStart = useRef<{ x: number; y: number } | null>(null);
+  const mobileScrollRef = useRef<HTMLDivElement>(null);
+  const isProgrammaticScroll = useRef(false);
 
   const goTo = (index: number) => {
     if (index < 0 || index >= photos.length) return;
@@ -35,6 +37,30 @@ export function PhotoGallery({ photos, alt, locale }: { photos: Photo[]; alt: st
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lightboxOpen, selected]);
 
+  // Keep the mobile swipe track in sync with `selected` when it changes from
+  // elsewhere (a desktop thumbnail click, lightbox arrows) — guarded so we
+  // don't fight the user's own in-progress swipe via the scroll handler below.
+  useEffect(() => {
+    const el = mobileScrollRef.current;
+    if (!el) return;
+    const target = selected * el.clientWidth;
+    if (Math.abs(el.scrollLeft - target) > 10) {
+      isProgrammaticScroll.current = true;
+      el.scrollTo({ left: target, behavior: "auto" });
+      requestAnimationFrame(() => {
+        isProgrammaticScroll.current = false;
+      });
+    }
+  }, [selected]);
+
+  const onMobileScroll = () => {
+    if (isProgrammaticScroll.current) return;
+    const el = mobileScrollRef.current;
+    if (!el || el.clientWidth === 0) return;
+    const index = Math.round(el.scrollLeft / el.clientWidth);
+    if (index !== selected) setSelected(index);
+  };
+
   const onLightboxTouchStart = (e: React.TouchEvent) => {
     touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
   };
@@ -52,34 +78,53 @@ export function PhotoGallery({ photos, alt, locale }: { photos: Photo[]; alt: st
     else if (dx < -SWIPE_THRESHOLD) goTo(selected + 1);
   };
 
-  // Swiping the inline hero photo just switches the selected photo — it
-  // doesn't open or close anything, unlike the lightbox swipe above.
-  const onMainTouchStart = (e: React.TouchEvent) => {
-    touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-  };
-  const onMainTouchEnd = (e: React.TouchEvent) => {
-    if (touchStart.current === null) return;
-    const dx = e.changedTouches[0].clientX - touchStart.current.x;
-    touchStart.current = null;
-    if (dx > SWIPE_THRESHOLD) goTo(selected - 1);
-    else if (dx < -SWIPE_THRESHOLD) goTo(selected + 1);
-  };
-
   // Mount the previous/next photo alongside the selected one (invisible via
   // opacity) so the browser starts fetching them immediately — clicking a
-  // thumbnail or swiping then just crossfades to an already-loaded image
-  // instead of waiting on a fresh request each time.
+  // thumbnail then just crossfades to an already-loaded image instead of
+  // waiting on a fresh request. Used by the desktop view and the lightbox.
   const neighbors = [selected - 1, selected, selected + 1].filter((i) => i >= 0 && i < photos.length);
 
   return (
-    <div className={`grid gap-2 ${photos.length > 1 ? "sm:grid-cols-[2fr_1fr] sm:h-[420px]" : ""}`}>
+    <div className={`sm:grid sm:gap-2 ${photos.length > 1 ? "sm:grid-cols-[2fr_1fr] sm:h-[420px]" : ""}`}>
+      {/* Mobile — native horizontal scroll-snap for a smooth, inertial swipe */}
+      <div className="relative rounded-xl overflow-hidden sm:hidden">
+        <div
+          ref={mobileScrollRef}
+          onScroll={onMobileScroll}
+          className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto scroll-smooth"
+        >
+          {photos.map((photo, i) => (
+            <button
+              key={photo.thumb + i}
+              type="button"
+              onClick={() => setLightboxOpen(true)}
+              aria-label="Открыть фото на весь экран"
+              className="relative h-[70vh] w-full flex-shrink-0 snap-center overflow-hidden"
+            >
+              <Image
+                src={photo.full}
+                alt={i === 0 ? alt : ""}
+                fill
+                loading={i === 0 ? "eager" : "lazy"}
+                className="object-cover"
+                sizes="100vw"
+              />
+            </button>
+          ))}
+        </div>
+        {photos.length > 1 && (
+          <span className="pointer-events-none absolute bottom-3 right-3 rounded-full bg-ink/70 px-2.5 py-1 font-mono text-xs text-plaster">
+            {selected + 1} / {photos.length}
+          </span>
+        )}
+      </div>
+
+      {/* Desktop — main photo + side thumbnail column */}
       <button
         type="button"
         onClick={() => setLightboxOpen(true)}
-        onTouchStart={onMainTouchStart}
-        onTouchEnd={onMainTouchEnd}
         aria-label="Открыть фото на весь экран"
-        className="relative h-[75vh] w-[calc(100%+3rem)] -mx-6 rounded-none sm:h-full sm:w-full sm:mx-0 sm:rounded-xl overflow-hidden block cursor-zoom-in"
+        className="relative hidden h-full w-full overflow-hidden rounded-xl sm:block"
       >
         {neighbors.map((i) => (
           <Image
@@ -94,11 +139,6 @@ export function PhotoGallery({ photos, alt, locale }: { photos: Photo[]; alt: st
             sizes={HERO_SIZES}
           />
         ))}
-        {photos.length > 1 && (
-          <span className="absolute bottom-3 right-3 sm:hidden rounded-full bg-ink/70 px-2.5 py-1 font-mono text-xs text-plaster">
-            {selected + 1} / {photos.length}
-          </span>
-        )}
       </button>
       {photos.length > 1 && (
         <div className="hidden gap-2 pb-1 sm:flex sm:h-full sm:flex-col sm:overflow-x-visible sm:overflow-y-auto sm:pb-0">
