@@ -79,13 +79,15 @@ export function BookingForm({
     <div className="rounded-xl border border-ink/10 bg-white p-6 shadow-sm">
       {price.status === "ok" ? (
         <>
-          <p className="font-mono text-xs uppercase tracking-wide text-ink/50">
+          <p className="font-mono text-xs uppercase tracking-wide text-ink/60">
             {t(locale, "bookingTotalPrice")}
           </p>
-          <p className="font-display text-3xl font-semibold text-indigo mt-1">${formatPrice(price.total)}</p>
-          <p className="mt-1 font-mono text-sm text-ink/60">
-            ${formatPrice(price.perPerson)} {t(locale, "perPerson")}
-          </p>
+          <p className="font-display text-3xl font-bold text-indigo mt-1">${formatPrice(price.total)}</p>
+          {pricing.model === "per_person" && (
+            <p className="mt-1 font-mono text-sm text-ink/70">
+              ${formatPrice(price.perPerson)} {t(locale, "perPerson")}
+            </p>
+          )}
         </>
       ) : (
         <p className="font-body text-sm text-ink/70">{t(locale, "priceContactMessage")}</p>
@@ -93,27 +95,29 @@ export function BookingForm({
       <p className="mt-1.5 text-xs text-ink/50">{t(locale, "bookingPaymentNote")}</p>
 
       {showTierTable && (
-        <table className="mt-4 w-full text-sm">
+        <table className="mt-4 w-full border-collapse text-sm">
           <thead>
-            <tr className="text-left font-mono text-xs uppercase text-ink/50">
-              <th className="pb-1.5 font-normal">{t(locale, "tierTableTravelers")}</th>
-              <th className="pb-1.5 font-normal text-right">{t(locale, "tierTableTotal")}</th>
-              <th className="pb-1.5 font-normal text-right">{t(locale, "tierTablePerPerson")}</th>
+            <tr className="border-b-2 border-ink/15 text-left font-mono text-xs uppercase tracking-wide text-ink/70">
+              <th className="pb-2 font-bold">{t(locale, "tierTableTravelers")}</th>
+              <th className="pb-2 text-right font-bold">{t(locale, "tierTableTotal")}</th>
+              <th className="pb-2 text-right font-bold">{t(locale, "tierTablePerPerson")}</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-ink/10">
             {tiers.map((tier, i) => (
               <tr
                 key={`${tier.from}-${tier.to}`}
                 className={
                   i === activeTierIndex
-                    ? "bg-turquoise/10 font-semibold text-ink"
-                    : "text-ink/70"
+                    ? "bg-turquoise/20 font-bold text-ink"
+                    : "font-medium text-ink/80"
                 }
               >
-                <td className="rounded-l-md py-1.5 pl-2">{tier.from === tier.to ? tier.from : `${tier.from}–${tier.to}`}</td>
-                <td className="py-1.5 text-right">${formatPrice(tier.price)}</td>
-                <td className="rounded-r-md py-1.5 pr-2 text-right">${formatPrice(tier.price / tier.from)}</td>
+                <td className="rounded-l-md py-2.5 pl-2">
+                  {tier.from === tier.to ? tier.from : `${tier.from}–${tier.to}`}
+                </td>
+                <td className="py-2.5 text-right">${formatPrice(tier.price)}</td>
+                <td className="rounded-r-md py-2.5 pr-2 text-right">${formatPrice(tier.price / tier.from)}</td>
               </tr>
             ))}
           </tbody>
