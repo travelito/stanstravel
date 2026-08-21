@@ -42,6 +42,10 @@ export function BookingForm({
   const price = useMemo(() => calculatePrice(pricing, travelers), [pricing, travelers]);
   const canSubmit = price.status === "ok" && date.trim() !== "" && pickup.trim() !== "";
 
+  const tiers = pricing.model === "group" ? (pricing.tiers ?? []) : [];
+  const showTierTable = tiers.length > 1;
+  const activeTierIndex = tiers.findIndex((tier) => travelers >= tier.from && travelers <= tier.to);
+
   const message = [
     t(locale, "bookingGreeting"),
     "",
@@ -87,6 +91,34 @@ export function BookingForm({
         <p className="font-body text-sm text-ink/70">{t(locale, "priceContactMessage")}</p>
       )}
       <p className="mt-1.5 text-xs text-ink/50">{t(locale, "bookingPaymentNote")}</p>
+
+      {showTierTable && (
+        <table className="mt-4 w-full text-sm">
+          <thead>
+            <tr className="text-left font-mono text-xs uppercase text-ink/50">
+              <th className="pb-1.5 font-normal">{t(locale, "tierTableTravelers")}</th>
+              <th className="pb-1.5 font-normal text-right">{t(locale, "tierTableTotal")}</th>
+              <th className="pb-1.5 font-normal text-right">{t(locale, "tierTablePerPerson")}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tiers.map((tier, i) => (
+              <tr
+                key={`${tier.from}-${tier.to}`}
+                className={
+                  i === activeTierIndex
+                    ? "bg-turquoise/10 font-semibold text-ink"
+                    : "text-ink/70"
+                }
+              >
+                <td className="rounded-l-md py-1.5 pl-2">{tier.from === tier.to ? tier.from : `${tier.from}–${tier.to}`}</td>
+                <td className="py-1.5 text-right">${formatPrice(tier.price)}</td>
+                <td className="rounded-r-md py-1.5 pr-2 text-right">${formatPrice(tier.price / tier.from)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
 
       <div className="mt-5 flex flex-col gap-4">
         <label className={fieldLabelClass}>
