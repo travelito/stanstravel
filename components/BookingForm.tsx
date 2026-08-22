@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { Calendar, Clock } from "lucide-react";
 import type { Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
 import { whatsappNumber, telegramUsername } from "@/lib/contact";
@@ -17,12 +18,14 @@ function formatDateForMessage(iso: string, locale: Locale): string {
   return locale === "ru" ? `${d}.${m}.${y}` : `${m}/${d}/${y}`;
 }
 
-// leading-[2.75rem] pins the line box to the full h-11 (2.75rem) height so
-// mobile browsers vertically center the native date/time value instead of
-// rendering their own taller intrinsic control box; sm:leading-5 restores
-// text-sm's normal line-height so desktop is pixel-identical to before.
+// Mobile browsers (notably iOS Safari) paint <input type="date"/"time">
+// with their own native grey fill and taller intrinsic box, ignoring our
+// border/background/height — appearance-none lets our own border+bg+height
+// actually render instead. Every sm: pair below restores today's exact
+// desktop rendering (no appearance/bg override, text-sm's normal leading),
+// so desktop is untouched.
 const inputClass =
-  "h-11 w-full rounded-md border border-ink/15 px-3 text-sm leading-[2.75rem] sm:leading-5 text-ink focus:outline-none focus:border-turquoise";
+  "h-11 w-full appearance-none rounded-md border border-ink/15 bg-white px-3 text-sm leading-[2.75rem] text-ink focus:outline-none focus:border-turquoise sm:appearance-auto sm:bg-transparent sm:leading-5";
 const fieldLabelClass = "flex flex-col gap-1 text-sm";
 const fieldNameClass = "font-medium text-ink/80";
 
@@ -137,13 +140,20 @@ export function BookingForm({
               value={date}
               min={todayIso()}
               onChange={(e) => setDate(e.target.value)}
-              className={`${inputClass} ${date ? "" : "text-transparent"}`}
+              className={`${inputClass} pr-9 sm:pr-3 ${date ? "" : "text-transparent"}`}
             />
             {!date && (
               <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-ink/40">
                 {t(locale, "bookingDatePlaceholder")}
               </span>
             )}
+            {/* appearance-none can drop Safari's native calendar icon on
+                mobile — this stand-in keeps one visible there; sm:hidden
+                because desktop keeps its native icon untouched. */}
+            <Calendar
+              aria-hidden="true"
+              className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/40 sm:hidden"
+            />
           </div>
         </label>
 
@@ -154,13 +164,17 @@ export function BookingForm({
               type="time"
               value={time}
               onChange={(e) => setTime(e.target.value)}
-              className={`${inputClass} ${time ? "" : "text-transparent"}`}
+              className={`${inputClass} pr-9 sm:pr-3 ${time ? "" : "text-transparent"}`}
             />
             {!time && (
               <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-ink/40">
                 {t(locale, "bookingTimePlaceholder")}
               </span>
             )}
+            <Clock
+              aria-hidden="true"
+              className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/40 sm:hidden"
+            />
           </div>
         </label>
 
