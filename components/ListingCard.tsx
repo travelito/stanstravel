@@ -32,13 +32,13 @@ export function ListingCard({
         />
       </div>
       <Link href={href} className="flex flex-1 flex-col p-5">
-        <p className="font-mono text-[11px] uppercase tracking-wide text-turquoise">{eyebrow}</p>
+        <p className="font-mono text-xs font-semibold uppercase tracking-wide text-turquoiseDark">{eyebrow}</p>
         <h3 className="mt-1.5 font-display text-lg font-semibold leading-snug text-ink group-hover:text-indigo group-hover:underline">
           {title}
         </h3>
-        <p className="mt-2 font-mono text-xs text-ink/50">{duration}</p>
+        <p className="mt-2 font-mono text-sm font-medium text-ink/70">{duration}</p>
         <div className="mt-auto flex items-baseline justify-between pt-3 font-mono text-sm">
-          <span className="text-ink/50">{fromLabel}</span>
+          <span className="font-semibold text-ink/70">{fromLabel}</span>
           <span className="text-base font-semibold text-indigo">${price}</span>
         </div>
       </Link>

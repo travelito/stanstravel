@@ -8,6 +8,7 @@ const config: Config = {
         ink: "#211D1A",
         indigo: "#1B3A5C",
         turquoise: "#2E9C97",
+        turquoiseDark: "#1F6E6A",
         clay: "#C9A66B",
         plaster: "#F2EDE4",
       },
