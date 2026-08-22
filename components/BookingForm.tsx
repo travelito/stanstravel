@@ -17,8 +17,12 @@ function formatDateForMessage(iso: string, locale: Locale): string {
   return locale === "ru" ? `${d}.${m}.${y}` : `${m}/${d}/${y}`;
 }
 
+// leading-[2.75rem] pins the line box to the full h-11 (2.75rem) height so
+// mobile browsers vertically center the native date/time value instead of
+// rendering their own taller intrinsic control box; sm:leading-5 restores
+// text-sm's normal line-height so desktop is pixel-identical to before.
 const inputClass =
-  "h-11 w-full rounded-md border border-ink/15 px-3 text-sm text-ink focus:outline-none focus:border-turquoise";
+  "h-11 w-full rounded-md border border-ink/15 px-3 text-sm leading-[2.75rem] sm:leading-5 text-ink focus:outline-none focus:border-turquoise";
 const fieldLabelClass = "flex flex-col gap-1 text-sm";
 const fieldNameClass = "font-medium text-ink/80";
 

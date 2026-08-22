@@ -17,7 +17,10 @@ export function Header({ locale }: { locale: Locale }) {
   return (
     <header className="relative z-50 border-b border-ink/10">
       <div className="mx-auto max-w-7xl px-6 py-5 flex items-center justify-between">
-        <Link href={`/${locale}`} className="font-display text-xl tracking-tight">
+        <Link
+          href={`/${locale}`}
+          className="-m-2 rounded-sm p-2 font-display text-xl font-semibold tracking-tight transition-colors hover:text-turquoise"
+        >
           {t(locale, "siteName")}
         </Link>
         <nav className="hidden sm:flex items-center gap-6 font-body text-sm">
