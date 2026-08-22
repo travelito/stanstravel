@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
+import { localizedAlternates } from "@/lib/seo";
 import { getAllTrainTickets, getTrainTicketBySlug } from "@/lib/data/train-tickets";
 
 export async function generateStaticParams() {
@@ -22,7 +23,7 @@ export async function generateMetadata({
   return {
     title: `${ticket.title[locale]} — ${t(locale, "siteName")}`,
     description: ticket.summary[locale],
-    alternates: { canonical: `/${locale}/train-tickets/${ticket.slug}` },
+    alternates: localizedAlternates(`/train-tickets/${ticket.slug}`, locale),
   };
 }
 

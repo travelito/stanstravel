@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
 import { cityLabel } from "@/lib/cities";
+import { localizedAlternates } from "@/lib/seo";
 import { getAllExcursions, groupExcursionsByCity } from "@/lib/data/excursions";
 import { ExcursionCard } from "@/components/ExcursionCard";
 import { CityFilterTabs } from "@/components/CityFilterTabs";
@@ -20,7 +21,7 @@ export async function generateMetadata({
   const locale = params.locale as Locale;
   return {
     title: `${t(locale, "excursionsTitle")} — ${t(locale, "siteName")}`,
-    alternates: { canonical: `/${locale}/excursions` },
+    alternates: localizedAlternates("/excursions", locale),
   };
 }
 

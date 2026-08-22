@@ -3,6 +3,7 @@ import Link from "next/link";
 import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
 import { notFound } from "next/navigation";
+import { localizedAlternates } from "@/lib/seo";
 import { phone, whatsappNumber } from "@/lib/contact";
 
 export function generateStaticParams() {
@@ -19,7 +20,7 @@ export async function generateMetadata({
   return {
     title: `${t(locale, "aboutTitle")} — ${t(locale, "siteName")}`,
     description: t(locale, "aboutIntro"),
-    alternates: { canonical: `/${locale}/about` },
+    alternates: localizedAlternates("/about", locale),
   };
 }
 

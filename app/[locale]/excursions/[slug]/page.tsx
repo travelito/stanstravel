@@ -6,6 +6,7 @@ import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
 import { cityLabel } from "@/lib/cities";
 import { formatHours } from "@/lib/duration";
+import { localizedAlternates } from "@/lib/seo";
 import { getAllExcursions, getExcursionBySlug } from "@/lib/data/excursions";
 import { ListingImage } from "@/components/ListingImage";
 import { PhotoGallery } from "@/components/PhotoGallery";
@@ -31,7 +32,7 @@ export async function generateMetadata({
   return {
     title: `${excursion.title[locale]} — ${t(locale, "siteName")}`,
     description: excursion.summary[locale],
-    alternates: { canonical: `/${locale}/excursions/${excursion.slug}` },
+    alternates: localizedAlternates(`/excursions/${excursion.slug}`, locale),
     openGraph: {
       title: excursion.title[locale],
       description: excursion.summary[locale],

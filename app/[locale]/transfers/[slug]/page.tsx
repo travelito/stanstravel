@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
+import { localizedAlternates } from "@/lib/seo";
 import { getAllTransfers, getTransferBySlug } from "@/lib/data/transfers";
 import { ListingImage } from "@/components/ListingImage";
 
@@ -23,7 +24,7 @@ export async function generateMetadata({
   return {
     title: `${transfer.title[locale]} — ${t(locale, "siteName")}`,
     description: transfer.summary[locale],
-    alternates: { canonical: `/${locale}/transfers/${transfer.slug}` },
+    alternates: localizedAlternates(`/transfers/${transfer.slug}`, locale),
     openGraph: {
       title: transfer.title[locale],
       description: transfer.summary[locale],

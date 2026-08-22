@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
+import { localizedAlternates } from "@/lib/seo";
 import { getAllTrainTickets } from "@/lib/data/train-tickets";
 import { notFound } from "next/navigation";
 
@@ -18,7 +19,7 @@ export async function generateMetadata({
   const locale = params.locale as Locale;
   return {
     title: `${t(locale, "trainTicketsTitle")} — ${t(locale, "siteName")}`,
-    alternates: { canonical: `/${locale}/train-tickets` },
+    alternates: localizedAlternates("/train-tickets", locale),
   };
 }
 

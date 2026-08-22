@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
 import { formatDuration } from "@/lib/duration";
+import { localizedAlternates } from "@/lib/seo";
 import { getAllTours, getTourBySlug } from "@/lib/data/tours";
 import { ListingImage } from "@/components/ListingImage";
 import { PhotoGallery } from "@/components/PhotoGallery";
@@ -28,7 +29,7 @@ export async function generateMetadata({
   return {
     title: `${tour.title[locale]} — ${t(locale, "siteName")}`,
     description: tour.summary[locale],
-    alternates: { canonical: `/${locale}/tours/${tour.slug}` },
+    alternates: localizedAlternates(`/tours/${tour.slug}`, locale),
     openGraph: {
       title: tour.title[locale],
       description: tour.summary[locale],

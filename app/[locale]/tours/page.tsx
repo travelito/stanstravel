@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
+import { localizedAlternates } from "@/lib/seo";
 import { getAllTours } from "@/lib/data/tours";
 import { TourCard } from "@/components/TourCard";
 import { notFound } from "next/navigation";
@@ -19,7 +20,7 @@ export async function generateMetadata({
   return {
     title: `${t(locale, "toursTitle")} — ${t(locale, "siteName")}`,
     description: t(locale, "heroSubtitle"),
-    alternates: { canonical: `/${locale}/tours` },
+    alternates: localizedAlternates("/tours", locale),
   };
 }
 

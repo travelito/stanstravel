@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
+import { localizedAlternates } from "@/lib/seo";
 import { getAllTours } from "@/lib/data/tours";
 import { getAllExcursions, groupExcursionsByCity } from "@/lib/data/excursions";
 import { TourCard } from "@/components/TourCard";
@@ -23,7 +24,7 @@ export async function generateMetadata({
   return {
     title: `${t(locale, "siteName")} — ${t(locale, "tagline")}`,
     description: t(locale, "heroSubtitle"),
-    alternates: { canonical: `/${locale}` },
+    alternates: localizedAlternates("", locale),
     openGraph: {
       title: `${t(locale, "siteName")} — ${t(locale, "tagline")}`,
       description: t(locale, "heroSubtitle"),
