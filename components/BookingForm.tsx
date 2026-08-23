@@ -114,11 +114,12 @@ export function BookingForm({
             {tiers.map((tier, i) => (
               <tr
                 key={`${tier.from}-${tier.to}`}
-                className={
+                onClick={() => setTravelers(tier.from)}
+                className={`cursor-pointer transition-colors ${
                   i === activeTierIndex
                     ? "bg-turquoise/20 font-bold text-ink"
-                    : "font-medium text-ink/80"
-                }
+                    : "font-medium text-ink/80 hover:bg-turquoise/10"
+                }`}
               >
                 <td className="rounded-l-md py-2.5 pl-2">
                   {tier.from === tier.to ? tier.from : `${tier.from}–${tier.to}`}
