@@ -111,7 +111,7 @@ export default async function ExcursionDetailPage({
               <p className="font-mono text-sm font-semibold uppercase tracking-wide text-turquoise">
                 {cityLabel(excursion!.city, locale)}
               </p>
-              <h1 className="font-display text-3xl sm:text-4xl font-semibold leading-tight text-ink mt-1">
+              <h1 className="font-display text-xl sm:text-4xl font-semibold leading-tight text-ink mt-1">
                 {excursion!.title[locale]}
               </h1>
             </div>

@@ -84,7 +84,7 @@ export default async function TourDetailPage({
             <p className="font-mono text-sm font-semibold uppercase tracking-wide text-turquoise">
               {tour!.city}
             </p>
-            <h1 className="font-display text-3xl sm:text-4xl font-semibold leading-tight text-ink mt-1">
+            <h1 className="font-display text-xl sm:text-4xl font-semibold leading-tight text-ink mt-1">
               {tour!.title[locale]}
             </h1>
             <p className="mt-3 font-mono text-sm text-ink/60">
