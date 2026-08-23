@@ -100,8 +100,14 @@ export function PhotoGallery({ photos, alt, locale }: { photos: Photo[]; alt: st
       {/* Mobile — native horizontal scroll-snap for a smooth, inertial swipe.
           Track height follows the selected photo's own aspect ratio (see
           mobileActiveRatio) instead of a fixed height, so each photo shows
-          at full width with no crop/zoom and no shared tall box. */}
-      <div className="relative rounded-xl overflow-hidden sm:hidden" style={{ aspectRatio: mobileActiveRatio }}>
+          at full width with no crop/zoom and no shared tall box. Capped at
+          max-h-[60vh] so portrait photos can't stretch the block down the
+          whole screen — object-contain then letterboxes instead of
+          cropping when that cap kicks in. */}
+      <div
+        className="relative max-h-[60vh] overflow-hidden rounded-xl bg-ink/5 sm:hidden"
+        style={{ aspectRatio: mobileActiveRatio }}
+      >
         <div
           ref={mobileScrollRef}
           onScroll={onMobileScroll}
@@ -120,7 +126,7 @@ export function PhotoGallery({ photos, alt, locale }: { photos: Photo[]; alt: st
                 alt={i === 0 ? alt : ""}
                 fill
                 loading={i === 0 ? "eager" : "lazy"}
-                className="object-cover"
+                className="object-contain"
                 sizes="100vw"
                 onLoad={(e) => {
                   const img = e.currentTarget;
