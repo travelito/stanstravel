@@ -3,6 +3,10 @@ import { getAllTours } from "@/lib/data/tours";
 import { deleteTour } from "@/app/admin/tours/actions";
 import { ConfirmSubmitButton } from "@/components/admin/ConfirmSubmitButton";
 
+// Internal tool — always show what's actually in the database, never a
+// cached snapshot.
+export const dynamic = "force-dynamic";
+
 export default async function AdminToursPage() {
   const tours = await getAllTours();
 

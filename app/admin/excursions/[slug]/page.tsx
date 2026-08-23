@@ -4,6 +4,10 @@ import { updateExcursion, deleteExcursion } from "@/app/admin/excursions/actions
 import { ExcursionForm } from "@/components/admin/ExcursionForm";
 import { ConfirmSubmitButton } from "@/components/admin/ConfirmSubmitButton";
 
+// Internal tool — always show what's actually in the database, never a
+// cached snapshot.
+export const dynamic = "force-dynamic";
+
 export default async function EditExcursionPage({
   params,
   searchParams,

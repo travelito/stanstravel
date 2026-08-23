@@ -4,6 +4,10 @@ import { updateTrainTicket, deleteTrainTicket } from "@/app/admin/train-tickets/
 import { TrainTicketForm } from "@/components/admin/TrainTicketForm";
 import { ConfirmSubmitButton } from "@/components/admin/ConfirmSubmitButton";
 
+// Internal tool — always show what's actually in the database, never a
+// cached snapshot.
+export const dynamic = "force-dynamic";
+
 export default async function EditTrainTicketPage({
   params,
   searchParams,

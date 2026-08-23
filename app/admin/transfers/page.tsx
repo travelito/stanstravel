@@ -3,6 +3,10 @@ import { getAllTransfers } from "@/lib/data/transfers";
 import { deleteTransfer } from "@/app/admin/transfers/actions";
 import { ConfirmSubmitButton } from "@/components/admin/ConfirmSubmitButton";
 
+// Internal tool — always show what's actually in the database, never a
+// cached snapshot.
+export const dynamic = "force-dynamic";
+
 export default async function AdminTransfersPage() {
   const transfers = await getAllTransfers();
 

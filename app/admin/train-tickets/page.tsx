@@ -3,6 +3,10 @@ import { getAllTrainTickets } from "@/lib/data/train-tickets";
 import { deleteTrainTicket } from "@/app/admin/train-tickets/actions";
 import { ConfirmSubmitButton } from "@/components/admin/ConfirmSubmitButton";
 
+// Internal tool — always show what's actually in the database, never a
+// cached snapshot.
+export const dynamic = "force-dynamic";
+
 export default async function AdminTrainTicketsPage() {
   const tickets = await getAllTrainTickets();
 

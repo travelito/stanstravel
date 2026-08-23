@@ -4,6 +4,10 @@ import { updateTour, deleteTour } from "@/app/admin/tours/actions";
 import { TourForm } from "@/components/admin/TourForm";
 import { ConfirmSubmitButton } from "@/components/admin/ConfirmSubmitButton";
 
+// Internal tool — always show what's actually in the database, never a
+// cached snapshot.
+export const dynamic = "force-dynamic";
+
 export default async function EditTourPage({
   params,
   searchParams,

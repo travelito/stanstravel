@@ -9,6 +9,13 @@ export function revalidateTourPaths(slug?: string) {
     if (slug) revalidatePath(`/${locale}/tours/${slug}`);
   }
   revalidatePath("/sitemap.xml");
+
+  // Admin list/edit pages aren't statically generated, but Next.js still
+  // prefetches and client-caches their rendered output — without this, the
+  // edit form can keep showing pre-save data after a Link navigation back
+  // into it, even though the DB write already succeeded.
+  revalidatePath("/admin/tours");
+  if (slug) revalidatePath(`/admin/tours/${slug}`);
 }
 
 export function revalidateExcursionPaths(slug?: string) {
@@ -19,6 +26,9 @@ export function revalidateExcursionPaths(slug?: string) {
     if (slug) revalidatePath(`/${locale}/excursions/${slug}`);
   }
   revalidatePath("/sitemap.xml");
+
+  revalidatePath("/admin/excursions");
+  if (slug) revalidatePath(`/admin/excursions/${slug}`);
 }
 
 export function revalidateTransferPaths(slug?: string) {
@@ -29,6 +39,9 @@ export function revalidateTransferPaths(slug?: string) {
     if (slug) revalidatePath(`/${locale}/transfers/${slug}`);
   }
   revalidatePath("/sitemap.xml");
+
+  revalidatePath("/admin/transfers");
+  if (slug) revalidatePath(`/admin/transfers/${slug}`);
 }
 
 export function revalidateTrainTicketPaths(slug?: string) {
@@ -39,4 +52,7 @@ export function revalidateTrainTicketPaths(slug?: string) {
     if (slug) revalidatePath(`/${locale}/train-tickets/${slug}`);
   }
   revalidatePath("/sitemap.xml");
+
+  revalidatePath("/admin/train-tickets");
+  if (slug) revalidatePath(`/admin/train-tickets/${slug}`);
 }

@@ -3,6 +3,10 @@ import { getAllExcursions } from "@/lib/data/excursions";
 import { deleteExcursion } from "@/app/admin/excursions/actions";
 import { ConfirmSubmitButton } from "@/components/admin/ConfirmSubmitButton";
 
+// Internal tool — always show what's actually in the database, never a
+// cached snapshot.
+export const dynamic = "force-dynamic";
+
 export default async function AdminExcursionsPage() {
   const excursions = await getAllExcursions();
 
