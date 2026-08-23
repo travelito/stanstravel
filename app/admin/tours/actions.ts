@@ -11,6 +11,11 @@ function paragraphs(value: FormDataEntryValue | null): string[] {
     .filter(Boolean);
 }
 
+function nullableText(value: FormDataEntryValue | null): string | null {
+  const s = String(value ?? "").trim();
+  return s === "" ? null : s;
+}
+
 function tourPayload(formData: FormData) {
   return {
     city: String(formData.get("city") ?? ""),
@@ -27,6 +32,7 @@ function tourPayload(formData: FormData) {
       ru: paragraphs(formData.get("highlights_ru")),
       en: paragraphs(formData.get("highlights_en")),
     },
+    tour_pace: nullableText(formData.get("tour_pace")),
   };
 }
 

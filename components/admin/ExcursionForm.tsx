@@ -217,6 +217,15 @@ export function ExcursionForm({
               <option value="false">Нет</option>
             </select>
           </label>
+          <label className={labelClass}>
+            Формат перемещения
+            <select name="tour_pace" defaultValue={excursion?.tourPace ?? ""} className={inputClass}>
+              <option value="">— не указано —</option>
+              <option value="walking">Пешая</option>
+              <option value="transport">На транспорте</option>
+              <option value="mixed">Смешанная</option>
+            </select>
+          </label>
         </div>
 
         {error && <p className="text-sm text-red-700">{error}</p>}

@@ -24,6 +24,7 @@ export type Excursion = {
   tourType: string | null;
   guideLanguage: string | null;
   pickupIncluded: boolean | null;
+  tourPace: string | null;
   pricingModel: PricingModel;
   priceTiers: PriceTier[] | null;
 };
@@ -45,6 +46,7 @@ type ExcursionRow = {
   tour_type: string | null;
   guide_language: string | null;
   pickup_included: boolean | null;
+  tour_pace: string | null;
   pricing_model: PricingModel;
   price_tiers: PriceTier[] | null;
 };
@@ -67,6 +69,7 @@ function rowToExcursion(row: ExcursionRow): Excursion {
     tourType: row.tour_type,
     guideLanguage: row.guide_language,
     pickupIncluded: row.pickup_included,
+    tourPace: row.tour_pace,
     pricingModel: row.pricing_model,
     priceTiers: row.price_tiers,
   };

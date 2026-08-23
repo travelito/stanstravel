@@ -75,6 +75,7 @@ function excursionPayload(formData: FormData): { payload: Record<string, unknown
       tour_type: nullableText(formData.get("tour_type")),
       guide_language: nullableText(formData.get("guide_language")),
       pickup_included: nullableBool(formData.get("pickup_included")),
+      tour_pace: nullableText(formData.get("tour_pace")),
     },
   };
 }

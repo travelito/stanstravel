@@ -8,6 +8,7 @@ import { cityLabel } from "@/lib/cities";
 import { formatHours } from "@/lib/duration";
 import { localizedAlternates } from "@/lib/seo";
 import { getAllExcursions, getExcursionBySlug } from "@/lib/data/excursions";
+import { tourPaceQuickInfoItem } from "@/lib/tour-pace";
 import { ListingImage } from "@/components/ListingImage";
 import { PhotoGallery } from "@/components/PhotoGallery";
 import { ShareButton } from "@/components/ShareButton";
@@ -69,6 +70,7 @@ export default async function ExcursionDetailPage({
     { icon: MapPin, label: cityLabel(excursion!.city, locale) },
     excursion!.guideLanguage ? { icon: Languages, label: excursion!.guideLanguage } : null,
     excursion!.pickupIncluded === true ? { icon: Car, label: t(locale, "quickInfoPickupIncluded") } : null,
+    tourPaceQuickInfoItem(excursion!.tourPace, locale),
   ].filter((item): item is QuickInfoItem => item !== null);
 
   const pricing: PricingConfig = {

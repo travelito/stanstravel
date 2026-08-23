@@ -77,6 +77,16 @@ export function TourForm({
         </label>
       </div>
 
+      <label className={labelClass}>
+        Формат перемещения
+        <select name="tour_pace" defaultValue={tour?.tourPace ?? ""} className={inputClass}>
+          <option value="">— не указано —</option>
+          <option value="walking">Пешая</option>
+          <option value="transport">На транспорте</option>
+          <option value="mixed">Смешанная</option>
+        </select>
+      </label>
+
       <div className="grid grid-cols-2 gap-4">
         <label className={labelClass}>
           Заголовок (RU)

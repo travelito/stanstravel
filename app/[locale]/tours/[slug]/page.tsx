@@ -1,15 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Clock } from "lucide-react";
 import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
 import { formatDuration } from "@/lib/duration";
 import { localizedAlternates } from "@/lib/seo";
 import { getAllTours, getTourBySlug } from "@/lib/data/tours";
+import { tourPaceQuickInfoItem } from "@/lib/tour-pace";
 import { ListingImage } from "@/components/ListingImage";
 import { PhotoGallery } from "@/components/PhotoGallery";
 import { ShareButton } from "@/components/ShareButton";
 import { BookingForm } from "@/components/BookingForm";
+import { QuickInfoRow, type QuickInfoItem } from "@/components/QuickInfoRow";
 import type { PricingConfig } from "@/lib/pricing";
 
 export async function generateStaticParams() {
@@ -52,6 +55,11 @@ export default async function TourDetailPage({
 
   const pricing: PricingConfig = { model: "per_person", pricePerPerson: tour!.priceUsd, tiers: null };
 
+  const quickInfoItems: QuickInfoItem[] = [
+    { icon: Clock, label: formatDuration(tour!.duration, locale) },
+    tourPaceQuickInfoItem(tour!.tourPace, locale),
+  ].filter((item): item is QuickInfoItem => item !== null);
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "TouristTrip",
@@ -87,9 +95,9 @@ export default async function TourDetailPage({
             <h1 className="font-display text-xl sm:text-4xl font-semibold leading-tight text-ink mt-1">
               {tour!.title[locale]}
             </h1>
-            <p className="mt-3 font-mono text-sm text-ink/60">
-              {t(locale, "duration")}: {formatDuration(tour!.duration, locale)}
-            </p>
+            <div className="mt-3">
+              <QuickInfoRow items={quickInfoItems} />
+            </div>
           </div>
           <ShareButton label={t(locale, "share")} locale={locale} />
         </div>

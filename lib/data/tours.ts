@@ -20,6 +20,7 @@ export type Tour = {
   highlights: Record<Locale, string[]>;
   image: string | null;
   photos: Photo[];
+  tourPace: string | null;
 };
 
 // Shape of a row as it comes back from Supabase (snake_case, jsonb columns).
@@ -36,6 +37,7 @@ type TourRow = {
   highlights: Record<Locale, string[]>;
   image: string | null;
   photos: Photo[];
+  tour_pace: string | null;
 };
 
 function rowToTour(row: TourRow): Tour {
@@ -51,6 +53,7 @@ function rowToTour(row: TourRow): Tour {
     highlights: row.highlights,
     image: row.image,
     photos: resolvePhotos(row.photos, row.image),
+    tourPace: row.tour_pace,
   };
 }
 
