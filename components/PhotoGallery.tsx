@@ -9,6 +9,9 @@ import { t } from "@/lib/dictionary";
 
 const SWIPE_THRESHOLD = 50;
 const HERO_SIZES = "(max-width: 640px) 100vw, 66vw";
+// Typical landscape-photo ratio, used only until a given slide's real
+// dimensions are known (see mobileRatios below).
+const FALLBACK_RATIO = 4 / 3;
 
 export function PhotoGallery({ photos, alt, locale }: { photos: Photo[]; alt: string; locale: Locale }) {
   const [selected, setSelected] = useState(0);
@@ -16,6 +19,13 @@ export function PhotoGallery({ photos, alt, locale }: { photos: Photo[]; alt: st
   const touchStart = useRef<{ x: number; y: number } | null>(null);
   const mobileScrollRef = useRef<HTMLDivElement>(null);
   const isProgrammaticScroll = useRef(false);
+  // Mobile-only: each photo's real width/height ratio, filled in as slides
+  // load (fill-mode Image doesn't expose this any other way). The visible
+  // slide's own ratio drives the track's height, so every photo shows at
+  // its natural proportions at full width instead of being cropped into a
+  // shared fixed-height box.
+  const [mobileRatios, setMobileRatios] = useState<Record<number, number>>({});
+  const mobileActiveRatio = mobileRatios[selected] ?? FALLBACK_RATIO;
 
   const goTo = (index: number) => {
     if (index < 0 || index >= photos.length) return;
@@ -87,12 +97,15 @@ export function PhotoGallery({ photos, alt, locale }: { photos: Photo[]; alt: st
 
   return (
     <div className={`sm:grid sm:gap-2 ${photos.length > 1 ? "sm:grid-cols-[2fr_1fr] sm:h-[420px]" : ""}`}>
-      {/* Mobile — native horizontal scroll-snap for a smooth, inertial swipe */}
-      <div className="relative rounded-xl overflow-hidden sm:hidden">
+      {/* Mobile — native horizontal scroll-snap for a smooth, inertial swipe.
+          Track height follows the selected photo's own aspect ratio (see
+          mobileActiveRatio) instead of a fixed height, so each photo shows
+          at full width with no crop/zoom and no shared tall box. */}
+      <div className="relative rounded-xl overflow-hidden sm:hidden" style={{ aspectRatio: mobileActiveRatio }}>
         <div
           ref={mobileScrollRef}
           onScroll={onMobileScroll}
-          className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto scroll-smooth"
+          className="no-scrollbar flex h-full snap-x snap-mandatory overflow-x-auto scroll-smooth"
         >
           {photos.map((photo, i) => (
             <button
@@ -100,7 +113,7 @@ export function PhotoGallery({ photos, alt, locale }: { photos: Photo[]; alt: st
               type="button"
               onClick={() => setLightboxOpen(true)}
               aria-label="Открыть фото на весь экран"
-              className="relative h-[70vh] w-full flex-shrink-0 snap-center overflow-hidden"
+              className="relative h-full w-full flex-shrink-0 snap-center overflow-hidden"
             >
               <Image
                 src={photo.full}
@@ -109,6 +122,13 @@ export function PhotoGallery({ photos, alt, locale }: { photos: Photo[]; alt: st
                 loading={i === 0 ? "eager" : "lazy"}
                 className="object-cover"
                 sizes="100vw"
+                onLoad={(e) => {
+                  const img = e.currentTarget;
+                  if (!img.naturalWidth || !img.naturalHeight) return;
+                  setMobileRatios((prev) =>
+                    i in prev ? prev : { ...prev, [i]: img.naturalWidth / img.naturalHeight }
+                  );
+                }}
               />
             </button>
           ))}
