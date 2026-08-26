@@ -223,7 +223,8 @@ export function BookingForm({
             href={contactWhatsappHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 rounded-md bg-[#25D366] px-5 py-3 font-body text-white hover:bg-[#1da851] transition-colors"
+            onTouchStart={() => {}}
+            className="flex items-center justify-center gap-2 rounded-md bg-[#25D366] px-5 py-3 font-body text-white transition-[background-color,transform] duration-100 ease-out hover:bg-[#1da851] active:scale-[0.97] motion-reduce:active:scale-100 [-webkit-tap-highlight-color:transparent]"
           >
             <WhatsAppIcon size={18} />
             WhatsApp
@@ -232,7 +233,8 @@ export function BookingForm({
             href={contactTelegramHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 rounded-md bg-[#229ED9] px-5 py-3 font-body text-white hover:bg-[#1b87b9] transition-colors"
+            onTouchStart={() => {}}
+            className="flex items-center justify-center gap-2 rounded-md bg-[#229ED9] px-5 py-3 font-body text-white transition-[background-color,transform] duration-100 ease-out hover:bg-[#1b87b9] active:scale-[0.97] motion-reduce:active:scale-100 [-webkit-tap-highlight-color:transparent]"
           >
             <TelegramIcon size={18} />
             Telegram
@@ -244,7 +246,8 @@ export function BookingForm({
             href={whatsappHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 rounded-md bg-[#25D366] px-5 py-3 font-body text-white hover:bg-[#1da851] transition-colors"
+            onTouchStart={() => {}}
+            className="flex items-center justify-center gap-2 rounded-md bg-[#25D366] px-5 py-3 font-body text-white transition-[background-color,transform] duration-100 ease-out hover:bg-[#1da851] active:scale-[0.97] motion-reduce:active:scale-100 [-webkit-tap-highlight-color:transparent]"
           >
             <WhatsAppIcon size={18} />
             WhatsApp
@@ -253,7 +256,8 @@ export function BookingForm({
             href={telegramHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 rounded-md bg-[#229ED9] px-5 py-3 font-body text-white hover:bg-[#1b87b9] transition-colors"
+            onTouchStart={() => {}}
+            className="flex items-center justify-center gap-2 rounded-md bg-[#229ED9] px-5 py-3 font-body text-white transition-[background-color,transform] duration-100 ease-out hover:bg-[#1b87b9] active:scale-[0.97] motion-reduce:active:scale-100 [-webkit-tap-highlight-color:transparent]"
           >
             <TelegramIcon size={18} />
             Telegram
