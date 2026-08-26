@@ -14,6 +14,7 @@ function todayIso(): string {
 }
 
 function formatDateForMessage(iso: string, locale: Locale): string {
+  if (!iso) return "";
   const [y, m, d] = iso.split("-");
   return locale === "ru" ? `${d}.${m}.${y}` : `${m}/${d}/${y}`;
 }
@@ -47,11 +48,12 @@ export function BookingForm({
 
   const maxCount = useMemo(() => maxTravelers(pricing), [pricing]);
   const price = useMemo(() => calculatePrice(pricing, travelers), [pricing, travelers]);
-  const canSubmit = price.status === "ok" && date.trim() !== "" && pickup.trim() !== "";
 
   const tiers = pricing.model === "group" ? (pricing.tiers ?? []) : [];
   const showTierTable = tiers.length > 1;
   const activeTierIndex = tiers.findIndex((tier) => travelers >= tier.from && travelers <= tier.to);
+
+  const notSpecified = t(locale, "bookingNotSpecified");
 
   const message = [
     t(locale, "bookingGreeting"),
@@ -59,10 +61,10 @@ export function BookingForm({
     t(locale, "bookingIntro"),
     "",
     `${kindLabel}: ${title}`,
-    `${t(locale, "bookingDate")}: ${formatDateForMessage(date, locale)}`,
+    `${t(locale, "bookingDate")}: ${date ? formatDateForMessage(date, locale) : notSpecified}`,
     ...(time ? [`${t(locale, "bookingStartTime")}: ${time}`] : []),
     `${t(locale, "bookingTravelers")}: ${travelers}`,
-    `${t(locale, "bookingPickupLocation")}: ${pickup}`,
+    `${t(locale, "bookingPickupLocation")}: ${pickup.trim() ? pickup : notSpecified}`,
     ...(price.status === "ok" ? [`${t(locale, "bookingTotalPrice")}: $${formatPrice(price.total)}`] : []),
     "",
     t(locale, "bookingClosing"),
@@ -238,46 +240,24 @@ export function BookingForm({
         </div>
       ) : (
         <div className="mt-5 flex flex-col gap-3">
-          {canSubmit ? (
-            <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 rounded-md bg-[#25D366] px-5 py-3 font-body text-white hover:bg-[#1da851] transition-colors"
-            >
-              <WhatsAppIcon size={18} />
-              WhatsApp
-            </a>
-          ) : (
-            <button
-              type="button"
-              disabled
-              className="flex items-center justify-center gap-2 rounded-md bg-[#25D366]/50 px-5 py-3 font-body text-white cursor-not-allowed"
-            >
-              <WhatsAppIcon size={18} />
-              WhatsApp
-            </button>
-          )}
-          {canSubmit ? (
-            <a
-              href={telegramHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 rounded-md bg-[#229ED9] px-5 py-3 font-body text-white hover:bg-[#1b87b9] transition-colors"
-            >
-              <TelegramIcon size={18} />
-              Telegram
-            </a>
-          ) : (
-            <button
-              type="button"
-              disabled
-              className="flex items-center justify-center gap-2 rounded-md bg-[#229ED9]/50 px-5 py-3 font-body text-white cursor-not-allowed"
-            >
-              <TelegramIcon size={18} />
-              Telegram
-            </button>
-          )}
+          <a
+            href={whatsappHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 rounded-md bg-[#25D366] px-5 py-3 font-body text-white hover:bg-[#1da851] transition-colors"
+          >
+            <WhatsAppIcon size={18} />
+            WhatsApp
+          </a>
+          <a
+            href={telegramHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 rounded-md bg-[#229ED9] px-5 py-3 font-body text-white hover:bg-[#1b87b9] transition-colors"
+          >
+            <TelegramIcon size={18} />
+            Telegram
+          </a>
         </div>
       )}
     </div>
