@@ -7,6 +7,7 @@ import type { Locale } from "@/lib/locales";
 import type { Duration } from "@/lib/duration";
 import { supabase } from "@/lib/supabase";
 import { resolvePhotos, type Photo } from "@/lib/storage";
+import type { PriceTier, PricingModel } from "@/lib/pricing";
 
 export type Tour = {
   slug: string;
@@ -21,6 +22,14 @@ export type Tour = {
   image: string | null;
   photos: Photo[];
   tourPace: string | null;
+  pricingModel: PricingModel;
+  priceTiers: PriceTier[] | null;
+  itinerary: Record<Locale, string[]> | null;
+  included: Record<Locale, string[]> | null;
+  notIncluded: Record<Locale, string[]> | null;
+  tourType: string | null;
+  guideLanguage: string | null;
+  pickupIncluded: boolean | null;
 };
 
 // Shape of a row as it comes back from Supabase (snake_case, jsonb columns).
@@ -38,6 +47,14 @@ type TourRow = {
   image: string | null;
   photos: Photo[];
   tour_pace: string | null;
+  pricing_model: PricingModel;
+  price_tiers: PriceTier[] | null;
+  itinerary: Record<Locale, string[]> | null;
+  included: Record<Locale, string[]> | null;
+  not_included: Record<Locale, string[]> | null;
+  tour_type: string | null;
+  guide_language: string | null;
+  pickup_included: boolean | null;
 };
 
 function rowToTour(row: TourRow): Tour {
@@ -54,6 +71,14 @@ function rowToTour(row: TourRow): Tour {
     image: row.image,
     photos: resolvePhotos(row.photos, row.image),
     tourPace: row.tour_pace,
+    pricingModel: row.pricing_model,
+    priceTiers: row.price_tiers,
+    itinerary: row.itinerary,
+    included: row.included,
+    notIncluded: row.not_included,
+    tourType: row.tour_type,
+    guideLanguage: row.guide_language,
+    pickupIncluded: row.pickup_included,
   };
 }
 

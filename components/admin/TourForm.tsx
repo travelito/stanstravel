@@ -1,5 +1,6 @@
 import type { Tour } from "@/lib/data/tours";
 import { PhotoUploader } from "@/components/admin/PhotoUploader";
+import { PricingFields } from "@/components/admin/PricingFields";
 
 const inputClass = "border border-ink/20 rounded-md px-3 py-2 bg-white w-full";
 const labelClass = "flex flex-col gap-1 text-sm";
@@ -42,21 +43,6 @@ export function TourForm({
           <input type="text" name="city" required defaultValue={tour?.city} className={inputClass} />
         </label>
         <label className={labelClass}>
-          Цена, $
-          <input
-            type="number"
-            name="price_usd"
-            required
-            min={0}
-            step="1"
-            defaultValue={tour?.priceUsd}
-            className={inputClass}
-          />
-        </label>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <label className={labelClass}>
           Длительность
           <input
             type="number"
@@ -68,22 +54,17 @@ export function TourForm({
             className={inputClass}
           />
         </label>
-        <label className={labelClass}>
-          Единица
-          <select name="duration_unit" defaultValue={tour?.duration.unit ?? "hours"} className={inputClass}>
-            <option value="hours">часы</option>
-            <option value="days">дни</option>
-          </select>
-        </label>
       </div>
 
       <label className={labelClass}>
-        Формат перемещения
-        <select name="tour_pace" defaultValue={tour?.tourPace ?? ""} className={inputClass}>
-          <option value="">— не указано —</option>
-          <option value="walking">Пешая</option>
-          <option value="transport">На транспорте</option>
-          <option value="mixed">Смешанная</option>
+        Единица длительности
+        <select
+          name="duration_unit"
+          defaultValue={tour?.duration.unit ?? "hours"}
+          className={`${inputClass} max-w-xs`}
+        >
+          <option value="hours">часы</option>
+          <option value="days">дни</option>
         </select>
       </label>
 
@@ -108,6 +89,12 @@ export function TourForm({
           <textarea name="summary_en" required rows={2} defaultValue={tour?.summary.en} className={inputClass} />
         </label>
       </div>
+
+      <PricingFields
+        defaultModel={tour?.pricingModel ?? "per_person"}
+        defaultPricePerPerson={tour?.pricingModel === "group" ? 0 : (tour?.priceUsd ?? 0)}
+        defaultTiers={tour?.priceTiers ?? []}
+      />
 
       <div className="grid grid-cols-2 gap-4">
         <label className={labelClass}>
@@ -148,6 +135,113 @@ export function TourForm({
             defaultValue={tour?.highlights.en.join("\n")}
             className={inputClass}
           />
+        </label>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <label className={labelClass}>
+          Itinerary — маршрут по точкам (RU), один пункт на строку, без времени
+          <textarea
+            name="itinerary_ru"
+            rows={4}
+            defaultValue={tour?.itinerary?.ru.join("\n")}
+            className={inputClass}
+          />
+        </label>
+        <label className={labelClass}>
+          Itinerary (EN), один пункт на строку
+          <textarea
+            name="itinerary_en"
+            rows={4}
+            defaultValue={tour?.itinerary?.en.join("\n")}
+            className={inputClass}
+          />
+        </label>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <label className={labelClass}>
+          Included — включено (RU), один пункт на строку
+          <textarea
+            name="included_ru"
+            rows={4}
+            defaultValue={tour?.included?.ru.join("\n")}
+            className={inputClass}
+          />
+        </label>
+        <label className={labelClass}>
+          Included (EN), один пункт на строку
+          <textarea
+            name="included_en"
+            rows={4}
+            defaultValue={tour?.included?.en.join("\n")}
+            className={inputClass}
+          />
+        </label>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <label className={labelClass}>
+          Not included — не включено (RU), один пункт на строку
+          <textarea
+            name="not_included_ru"
+            rows={4}
+            defaultValue={tour?.notIncluded?.ru.join("\n")}
+            className={inputClass}
+          />
+        </label>
+        <label className={labelClass}>
+          Not included (EN), один пункт на строку
+          <textarea
+            name="not_included_en"
+            rows={4}
+            defaultValue={tour?.notIncluded?.en.join("\n")}
+            className={inputClass}
+          />
+        </label>
+      </div>
+
+      <div className="grid grid-cols-4 gap-4">
+        <label className={labelClass}>
+          Тип тура
+          <select name="tour_type" defaultValue={tour?.tourType ?? ""} className={inputClass}>
+            <option value="">— не указано —</option>
+            <option value="private">Private</option>
+            <option value="group">Group</option>
+          </select>
+        </label>
+        <label className={labelClass}>
+          Язык гида
+          <input
+            type="text"
+            name="guide_language"
+            defaultValue={tour?.guideLanguage ?? ""}
+            placeholder="например, English, Russian"
+            className={inputClass}
+          />
+        </label>
+        <label className={labelClass}>
+          Трансфер/пикап включён
+          <select
+            name="pickup_included"
+            defaultValue={
+              tour?.pickupIncluded === true ? "true" : tour?.pickupIncluded === false ? "false" : ""
+            }
+            className={inputClass}
+          >
+            <option value="">— не указано —</option>
+            <option value="true">Да</option>
+            <option value="false">Нет</option>
+          </select>
+        </label>
+        <label className={labelClass}>
+          Формат перемещения
+          <select name="tour_pace" defaultValue={tour?.tourPace ?? ""} className={inputClass}>
+            <option value="">— не указано —</option>
+            <option value="walking">Пешая</option>
+            <option value="transport">На транспорте</option>
+            <option value="mixed">Смешанная</option>
+          </select>
         </label>
       </div>
 

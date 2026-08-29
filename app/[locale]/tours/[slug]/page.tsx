@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Clock } from "lucide-react";
+import { Clock, User, Users, Languages, Car, Check, X } from "lucide-react";
 import { isLocale, locales, type Locale } from "@/lib/locales";
 import { t } from "@/lib/dictionary";
 import { formatDuration } from "@/lib/duration";
@@ -53,10 +53,26 @@ export default async function TourDetailPage({
   const tour = await getTourBySlug(params.slug);
   if (!tour) notFound(); // real 404 — no fallback to homepage content
 
-  const pricing: PricingConfig = { model: "per_person", pricePerPerson: tour!.priceUsd, tiers: null };
+  const itinerary = tour!.itinerary?.[locale] ?? [];
+  const included = tour!.included?.[locale] ?? [];
+  const notIncluded = tour!.notIncluded?.[locale] ?? [];
+
+  const pricing: PricingConfig = {
+    model: tour!.pricingModel,
+    pricePerPerson: tour!.priceUsd,
+    tiers: tour!.priceTiers,
+  };
 
   const quickInfoItems: QuickInfoItem[] = [
     { icon: Clock, label: formatDuration(tour!.duration, locale) },
+    tour!.tourType
+      ? {
+          icon: tour!.tourType === "group" ? Users : User,
+          label: t(locale, tour!.tourType === "group" ? "quickInfoGroupTour" : "quickInfoPrivateTour"),
+        }
+      : null,
+    tour!.guideLanguage ? { icon: Languages, label: tour!.guideLanguage } : null,
+    tour!.pickupIncluded === true ? { icon: Car, label: t(locale, "quickInfoPickupIncluded") } : null,
     tourPaceQuickInfoItem(tour!.tourPace, locale),
   ].filter((item): item is QuickInfoItem => item !== null);
 
@@ -127,6 +143,44 @@ export default async function TourDetailPage({
               <li key={h}>{h}</li>
             ))}
           </ul>
+
+          {itinerary.length > 0 && (
+            <>
+              <h2 className="font-display text-xl font-semibold mt-10 mb-3">{t(locale, "itineraryTitle")}</h2>
+              <p className="text-ink/80 leading-relaxed">{itinerary.join(" → ")}</p>
+            </>
+          )}
+
+          {(included.length > 0 || notIncluded.length > 0) && (
+            <div className="mt-10 grid sm:grid-cols-2 gap-8">
+              {included.length > 0 && (
+                <div>
+                  <h2 className="font-display text-xl font-semibold mb-3">{t(locale, "includedTitle")}</h2>
+                  <ul className="space-y-1.5">
+                    {included.map((item) => (
+                      <li key={item} className="flex items-start gap-2 text-ink/80">
+                        <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-turquoise" aria-hidden="true" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {notIncluded.length > 0 && (
+                <div>
+                  <h2 className="font-display text-xl font-semibold mb-3">{t(locale, "notIncludedTitle")}</h2>
+                  <ul className="space-y-1.5">
+                    {notIncluded.map((item) => (
+                      <li key={item} className="flex items-start gap-2 text-ink/60">
+                        <X className="mt-0.5 h-4 w-4 flex-shrink-0 text-ink/40" aria-hidden="true" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         <aside className="lg:order-last">
