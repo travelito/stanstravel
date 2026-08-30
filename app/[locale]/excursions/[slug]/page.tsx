@@ -146,7 +146,11 @@ export default async function ExcursionDetailPage({
           {itinerary.length > 0 && (
             <section className="py-8">
               <h2 className="font-display text-xl font-semibold mb-3">{t(locale, "itineraryTitle")}</h2>
-              <p className="text-ink/80 leading-relaxed">{itinerary.join(" → ")}</p>
+              <div className="text-ink/80 leading-relaxed space-y-2">
+                {itinerary.map((item, i) => (
+                  <p key={i}>{item}</p>
+                ))}
+              </div>
             </section>
           )}
 
