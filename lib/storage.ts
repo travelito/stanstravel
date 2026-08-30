@@ -37,7 +37,7 @@ export async function uploadListingPhoto(
 ): Promise<void> {
   const { error } = await supabase.storage
     .from(BUCKET)
-    .upload(path, blob, { contentType: "image/webp" });
+    .upload(path, blob, { contentType: "image/webp", cacheControl: "31536000" });
 
   if (error) {
     throw new Error(`Не удалось загрузить фото: ${error.message}`);
