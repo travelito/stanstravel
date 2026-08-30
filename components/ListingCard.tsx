@@ -11,6 +11,7 @@ export function ListingCard({
   duration,
   fromLabel,
   price,
+  priority,
 }: {
   href: string;
   photos: Photo[];
@@ -20,6 +21,7 @@ export function ListingCard({
   duration: string;
   fromLabel: string;
   price: number;
+  priority?: boolean;
 }) {
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-turquoise/60 hover:shadow-md">
@@ -29,6 +31,7 @@ export function ListingCard({
           photos={photos}
           alt={imageAlt}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          priority={priority}
         />
       </div>
       <Link href={href} className="flex flex-1 flex-col p-5">

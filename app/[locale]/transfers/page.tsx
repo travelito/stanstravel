@@ -39,7 +39,7 @@ export default async function TransfersPage({ params }: { params: { locale: stri
       </nav>
       <h1 className="font-display text-3xl mb-8">{t(locale, "transfersTitle")}</h1>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {transfers.map((tr) => (
+        {transfers.map((tr, i) => (
           <div
             key={tr.slug}
             className="flex flex-col overflow-hidden border border-ink/10 rounded-lg bg-white/40 hover:border-turquoise transition-colors"
@@ -49,6 +49,7 @@ export default async function TransfersPage({ params }: { params: { locale: stri
                 src={tr.photos[0]?.thumb ?? null}
                 alt={tr.title[locale]}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                priority={i === 0}
               />
             </Link>
             <Link href={`/${locale}/transfers/${tr.slug}`} className="block p-5">

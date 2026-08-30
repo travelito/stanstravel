@@ -59,12 +59,17 @@ export default async function ExcursionsPage({
         basePath={`/${locale}/excursions`}
       />
 
-      {sections.map(([city, items]) => (
+      {sections.map(([city, items], sectionIndex) => (
         <div key={city} className="mb-14">
           <h2 className="font-display text-2xl mb-6">{cityLabel(city, locale)}</h2>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {items.map((excursion) => (
-              <ExcursionCard key={excursion.slug} excursion={excursion} locale={locale} />
+            {items.map((excursion, itemIndex) => (
+              <ExcursionCard
+                key={excursion.slug}
+                excursion={excursion}
+                locale={locale}
+                priority={sectionIndex === 0 && itemIndex === 0}
+              />
             ))}
           </div>
         </div>

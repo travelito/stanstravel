@@ -4,7 +4,15 @@ import { formatHours } from "@/lib/duration";
 import type { Excursion } from "@/lib/data/excursions";
 import { ListingCard } from "@/components/ListingCard";
 
-export function ExcursionCard({ excursion, locale }: { excursion: Excursion; locale: Locale }) {
+export function ExcursionCard({
+  excursion,
+  locale,
+  priority,
+}: {
+  excursion: Excursion;
+  locale: Locale;
+  priority?: boolean;
+}) {
   return (
     <ListingCard
       href={`/${locale}/excursions/${excursion.slug}`}
@@ -15,6 +23,7 @@ export function ExcursionCard({ excursion, locale }: { excursion: Excursion; loc
       duration={formatHours(excursion.durationHours, locale)}
       fromLabel={t(locale, "fromPrice")}
       price={excursion.priceUsd}
+      priority={priority}
     />
   );
 }

@@ -4,7 +4,15 @@ import { formatDuration } from "@/lib/duration";
 import type { Tour } from "@/lib/data/tours";
 import { ListingCard } from "@/components/ListingCard";
 
-export function TourCard({ tour, locale }: { tour: Tour; locale: Locale }) {
+export function TourCard({
+  tour,
+  locale,
+  priority,
+}: {
+  tour: Tour;
+  locale: Locale;
+  priority?: boolean;
+}) {
   return (
     <ListingCard
       href={`/${locale}/tours/${tour.slug}`}
@@ -15,6 +23,7 @@ export function TourCard({ tour, locale }: { tour: Tour; locale: Locale }) {
       duration={formatDuration(tour.duration, locale)}
       fromLabel={t(locale, "fromPrice")}
       price={tour.priceUsd}
+      priority={priority}
     />
   );
 }

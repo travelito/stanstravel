@@ -62,6 +62,7 @@ export default async function TransferDetailPage({
           src={transfer!.photos[0]?.full ?? null}
           alt={transfer!.title[locale]}
           sizes="(max-width: 768px) 100vw, 768px"
+          priority
         />
       </div>
       <p className="font-mono text-xs text-turquoise uppercase tracking-wide mt-6">

@@ -43,8 +43,8 @@ export default async function ToursPage({
       </nav>
       <h1 className="font-display text-3xl mb-8">{t(locale, "toursTitle")}</h1>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {tours.map((tour) => (
-          <TourCard key={tour.slug} tour={tour} locale={locale} />
+        {tours.map((tour, i) => (
+          <TourCard key={tour.slug} tour={tour} locale={locale} priority={i === 0} />
         ))}
       </div>
     </div>

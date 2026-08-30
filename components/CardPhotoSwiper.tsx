@@ -13,23 +13,25 @@ export function CardPhotoSwiper({
   photos,
   alt,
   sizes,
+  priority,
 }: {
   href: string;
   photos: Photo[];
   alt: string;
   sizes: string;
+  priority?: boolean;
 }) {
   if (photos.length === 0) {
     return (
       <Link href={href} className="absolute inset-0 block">
-        <ListingImage src={null} alt={alt} sizes={sizes} />
+        <ListingImage src={null} alt={alt} sizes={sizes} priority={priority} />
       </Link>
     );
   }
 
   return (
     <Link href={href} className="absolute inset-0 block">
-      <Image src={photos[0].medium} alt={alt} fill className="object-cover" sizes={sizes} />
+      <Image src={photos[0].medium} alt={alt} fill className="object-cover" sizes={sizes} priority={priority} />
     </Link>
   );
 }

@@ -73,8 +73,8 @@ export default async function HomePage({
       <section className="py-12">
         <h2 className="font-display text-2xl mb-6">{t(locale, "toursTitle")}</h2>
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {tours.map((tour) => (
-            <TourCard key={tour.slug} tour={tour} locale={locale} />
+          {tours.map((tour, i) => (
+            <TourCard key={tour.slug} tour={tour} locale={locale} priority={i === 0} />
           ))}
         </div>
       </section>

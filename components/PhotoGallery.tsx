@@ -161,6 +161,7 @@ export function PhotoGallery({ photos, alt, locale }: { photos: Photo[]; alt: st
               alt={i === selected ? alt : ""}
               fill
               loading="eager"
+              priority={i === 0}
               className={`object-cover transition-opacity duration-150 ${
                 i === selected ? "opacity-100" : "opacity-0"
               }`}

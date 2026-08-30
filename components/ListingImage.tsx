@@ -6,13 +6,15 @@ export function ListingImage({
   src,
   alt,
   sizes,
+  priority,
 }: {
   src?: string | null;
   alt: string;
   sizes?: string;
+  priority?: boolean;
 }) {
   if (src) {
-    return <Image src={src} alt={alt} fill className="object-cover" sizes={sizes} />;
+    return <Image src={src} alt={alt} fill className="object-cover" sizes={sizes} priority={priority} />;
   }
 
   return (
