@@ -5,6 +5,7 @@ import { t } from "@/lib/dictionary";
 import { localizedAlternates } from "@/lib/seo";
 import { getAllTransfers } from "@/lib/data/transfers";
 import { notFound } from "next/navigation";
+import { CardPhotoSwiper } from "@/components/CardPhotoSwiper";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -39,25 +40,34 @@ export default async function TransfersPage({ params }: { params: { locale: stri
       <h1 className="font-display text-3xl mb-8">{t(locale, "transfersTitle")}</h1>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {transfers.map((tr) => (
-          <Link
+          <div
             key={tr.slug}
-            href={`/${locale}/transfers/${tr.slug}`}
-            className="block border border-ink/10 rounded-lg p-5 bg-white/40 hover:border-turquoise transition-colors"
+            className="flex flex-col overflow-hidden border border-ink/10 rounded-lg bg-white/40 hover:border-turquoise transition-colors"
           >
-            <p className="font-mono text-xs text-turquoise uppercase tracking-wide">
-              {tr.fromCity} → {tr.toCity} · {tr.transportType}
-            </p>
-            <h2 className="font-display text-lg mt-1">{tr.title[locale]}</h2>
-            <p className="text-sm text-ink/70 mt-2">{tr.summary[locale]}</p>
-            <div className="flex justify-between mt-4 font-mono text-sm">
-              <span>
-                {tr.durationHours} {t(locale, "hours")}
-              </span>
-              <span className="text-indigo font-semibold">
-                {t(locale, "fromPrice")} ${tr.priceUsd}
-              </span>
+            <div className="relative h-40 w-full">
+              <CardPhotoSwiper
+                href={`/${locale}/transfers/${tr.slug}`}
+                photos={tr.photos}
+                alt={tr.title[locale]}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              />
             </div>
-          </Link>
+            <Link href={`/${locale}/transfers/${tr.slug}`} className="block p-5">
+              <p className="font-mono text-xs text-turquoise uppercase tracking-wide">
+                {tr.fromCity} → {tr.toCity} · {tr.transportType}
+              </p>
+              <h2 className="font-display text-lg mt-1">{tr.title[locale]}</h2>
+              <p className="text-sm text-ink/70 mt-2">{tr.summary[locale]}</p>
+              <div className="flex justify-between mt-4 font-mono text-sm">
+                <span>
+                  {tr.durationHours} {t(locale, "hours")}
+                </span>
+                <span className="text-indigo font-semibold">
+                  {t(locale, "fromPrice")} ${tr.priceUsd}
+                </span>
+              </div>
+            </Link>
+          </div>
         ))}
       </div>
     </div>
