@@ -59,7 +59,7 @@ export default async function TransferDetailPage({
       </nav>
       <div className="relative h-72 w-full rounded-lg overflow-hidden">
         <ListingImage
-          src={transfer!.photos[0]?.full ?? null}
+          src={transfer!.photos[0]?.medium ?? null}
           alt={transfer!.title[locale]}
           sizes="(max-width: 768px) 100vw, 768px"
           priority

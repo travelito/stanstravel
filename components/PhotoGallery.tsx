@@ -122,7 +122,7 @@ export function PhotoGallery({ photos, alt, locale }: { photos: Photo[]; alt: st
               className="relative h-full w-full flex-shrink-0 snap-center overflow-hidden"
             >
               <Image
-                src={photo.full}
+                src={photo.medium}
                 alt={i === 0 ? alt : ""}
                 fill
                 loading={i === 0 ? "eager" : "lazy"}
