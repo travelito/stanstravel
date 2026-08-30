@@ -5,7 +5,7 @@ import { t } from "@/lib/dictionary";
 import { localizedAlternates } from "@/lib/seo";
 import { getAllTransfers } from "@/lib/data/transfers";
 import { notFound } from "next/navigation";
-import { CardPhotoSwiper } from "@/components/CardPhotoSwiper";
+import { ListingImage } from "@/components/ListingImage";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -44,14 +44,13 @@ export default async function TransfersPage({ params }: { params: { locale: stri
             key={tr.slug}
             className="flex flex-col overflow-hidden border border-ink/10 rounded-lg bg-white/40 hover:border-turquoise transition-colors"
           >
-            <div className="relative h-40 w-full">
-              <CardPhotoSwiper
-                href={`/${locale}/transfers/${tr.slug}`}
-                photos={tr.photos}
+            <Link href={`/${locale}/transfers/${tr.slug}`} className="relative block h-40 w-full">
+              <ListingImage
+                src={tr.photos[0]?.thumb ?? null}
                 alt={tr.title[locale]}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
-            </div>
+            </Link>
             <Link href={`/${locale}/transfers/${tr.slug}`} className="block p-5">
               <p className="font-mono text-xs text-turquoise uppercase tracking-wide">
                 {tr.fromCity} → {tr.toCity} · {tr.transportType}
